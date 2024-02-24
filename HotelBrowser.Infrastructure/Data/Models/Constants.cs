@@ -14,5 +14,6 @@ namespace HotelBrowser.Infrastructure.Data.Models
         public const int DecriptionMaxLength = 1500;
         public const int LocationMaxLength = 70;
         public const int ImageMaxLength = 1500;
+        public const int WorkCategoryMaxNameLength = 15;
     }
 }

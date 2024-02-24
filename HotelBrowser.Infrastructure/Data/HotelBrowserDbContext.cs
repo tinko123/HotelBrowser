@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using HotelBrowser.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelBrowser.Infrastructure.Data
@@ -9,5 +10,6 @@ namespace HotelBrowser.Infrastructure.Data
             : base(options)
         {
         }
+        public DbSet<Hotel> Hotels { get; set; }
     }
 }
