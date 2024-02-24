@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelBrowser.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class HotelsBrowserDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public HotelsBrowserDbContext(DbContextOptions<HotelsBrowserDbContext> options)
             : base(options)
         {
         }
