@@ -5,6 +5,10 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBrowser", "HotelBrowser\HotelBrowser.csproj", "{D3584B0C-A8AA-46E4-9C1D-3B276F9CFBF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBrowser.Core", "HotelBrowser.Core\HotelBrowser.Core.csproj", "{4D5D870C-9E2C-41E4-916B-6DDC820FDF9A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBrowser.Infrastructure", "HotelBrowser.Infrastructure\HotelBrowser.Infrastructure.csproj", "{A9E0469A-FC0E-419E-A864-E22A7B9185E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{D3584B0C-A8AA-46E4-9C1D-3B276F9CFBF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3584B0C-A8AA-46E4-9C1D-3B276F9CFBF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3584B0C-A8AA-46E4-9C1D-3B276F9CFBF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D5D870C-9E2C-41E4-916B-6DDC820FDF9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D5D870C-9E2C-41E4-916B-6DDC820FDF9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D5D870C-9E2C-41E4-916B-6DDC820FDF9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D5D870C-9E2C-41E4-916B-6DDC820FDF9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9E0469A-FC0E-419E-A864-E22A7B9185E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E0469A-FC0E-419E-A864-E22A7B9185E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E0469A-FC0E-419E-A864-E22A7B9185E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E0469A-FC0E-419E-A864-E22A7B9185E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
