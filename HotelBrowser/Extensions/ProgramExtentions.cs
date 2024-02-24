@@ -1,5 +1,4 @@
-﻿using HotelBrowser.Data;
-using HotelBrowser.Infrastructure.Data;
+﻿using HotelBrowser.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration config)
         {
             var connectionString = config.GetConnectionString("DefaultConnection");
-            services.AddDbContext<HotelsBrowserDbContext>(options =>
+            services.AddDbContext<HotelBrowserDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -35,7 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                 })
-                .AddEntityFrameworkStores<HotelsBrowserDbContext>();
+                .AddEntityFrameworkStores<HotelBrowserDbContext>();
 
             return services;
         }
