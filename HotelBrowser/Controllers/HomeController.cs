@@ -15,6 +15,10 @@ namespace HotelBrowser.Controllers
 
         public IActionResult Index()
         {
+            //if (User?.Identities != null && User.Identity.IsAuthenticated)
+            //{
+            //    return RedirectToAction("All", "Seminar");
+            //}
             return View();
         }
 
