@@ -1,8 +1,31 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<AllHotelsViewModel>
+@{
+	ViewBag.Title = "Hotel Browser";
 }
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+@if (Model.Count() > 0)
+{
+	<div class="row">
+		@foreach (var hotel in Model)
+		{
+			<div class="col-sm-6">
+				<div class="card ">
+					<div class="card-body">
+						<img class="card-img-top" src=@hotel.Image>
+						<h4 class="card-title text-center">@hotel.Name</h4>
+						<p class="card-text">Location: @hotel.Location</p>
+						<p class="card-text">Telephone for reservations: @hotel.Phone</p>
+						<a asp-controller="Hotel" asp-action="AllHotels" class="btn btn-info">View More</a>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}
+else
+{
+	<p class="text-center">No posts yet!</p>
+}
