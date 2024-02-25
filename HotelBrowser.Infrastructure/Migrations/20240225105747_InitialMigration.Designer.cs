@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBrowser.Infrastructure.Migrations
 {
     [DbContext(typeof(HotelBrowserDbContext))]
-    [Migration("20240224175026_TableHotelsAndWorkCategory")]
-    partial class TableHotelsAndWorkCategory
+    [Migration("20240225105747_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,15 +61,10 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasComment("Hotel name");
 
-                    b.Property<string>("OwenerId")
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Hotel's owner identifier");
-
-                    b.Property<string>("Owner")
+                    b.Property<string>("OwnerId")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasComment("Owner of the hotel");
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("Hotel's owner identifier");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -82,6 +77,8 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasComment("WorkCategory identifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("WorkCategoryId");
 
@@ -106,6 +103,23 @@ namespace HotelBrowser.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "All year"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Summer"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Winter"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -312,11 +326,19 @@ namespace HotelBrowser.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Hotel", b =>
                 {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HotelBrowser.Infrastructure.Data.Models.WorkCategory", "WorkCategory")
                         .WithMany("Hotels")
                         .HasForeignKey("WorkCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Owner");
 
                     b.Navigation("WorkCategory");
                 });

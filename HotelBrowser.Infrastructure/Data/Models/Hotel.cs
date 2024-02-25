@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,7 +28,7 @@ namespace HotelBrowser.Infrastructure.Data.Models
         [Required]
         [MaxLength(OwnerMaxNameLength)]
         [Comment("Owner of the hotel")]
-        public string Owner { get; set; } = string.Empty;
+        public IdentityUser Owner { get; set; } = null!;
         [Required]
         [Comment("How many rooms are free to use")]
         public int FreeRooms { get; set; }
@@ -44,6 +45,6 @@ namespace HotelBrowser.Infrastructure.Data.Models
         [Comment("Hotel's image url")]
         public string Image { get; set; } = string.Empty;
         [Comment("Hotel's owner identifier")]
-        public string? OwenerId { get; set; }
+        public string? OwnerId { get; set; }
     }
 }

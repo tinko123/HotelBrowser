@@ -14,6 +14,7 @@ namespace HotelBrowser.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new WorkCategoryConfiguration());
+            builder.ApplyConfiguration(new HotelConfiguration());
             base.OnModelCreating(builder);
         }
         public DbSet<Hotel> Hotels { get; set; } = null!;

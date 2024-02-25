@@ -3,11 +3,8 @@ using HotelBrowser.Core.Models;
 using HotelBrowser.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
+using System.Security.Claims;
 
 namespace HotelBrowser.Core.Services
 {
@@ -31,7 +28,7 @@ namespace HotelBrowser.Core.Services
                     Image = h.Image,
                     Description = h.Description,
                     FreeRooms = h.FreeRooms, 
-                    Owner = h.Owner,
+                    Owner = h.Owner.UserName,
                     Phone = h.Phone
 
                 })

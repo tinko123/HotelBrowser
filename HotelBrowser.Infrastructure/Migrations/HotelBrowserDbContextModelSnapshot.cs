@@ -59,15 +59,10 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasComment("Hotel name");
 
-                    b.Property<string>("OwenerId")
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Hotel's owner identifier");
-
-                    b.Property<string>("Owner")
+                    b.Property<string>("OwnerId")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasComment("Owner of the hotel");
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("Hotel's owner identifier");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -81,9 +76,11 @@ namespace HotelBrowser.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId");
+
                     b.HasIndex("WorkCategoryId");
 
-                    b.ToTable("Hotels");
+                    b.ToTable("Hotels", (string)null);
                 });
 
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.WorkCategory", b =>
@@ -103,7 +100,7 @@ namespace HotelBrowser.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkCategories");
+                    b.ToTable("WorkCategories", (string)null);
 
                     b.HasData(
                         new
@@ -327,11 +324,19 @@ namespace HotelBrowser.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Hotel", b =>
                 {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HotelBrowser.Infrastructure.Data.Models.WorkCategory", "WorkCategory")
                         .WithMany("Hotels")
                         .HasForeignKey("WorkCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Owner");
 
                     b.Navigation("WorkCategory");
                 });
