@@ -38,5 +38,9 @@ namespace HotelBrowser.Core.Models
         [Required(ErrorMessage = RequiredField)]
         [MaxLength(ImageMaxLength,ErrorMessage = ImageErrorMessage)]
         public string Image { get; set; } = string.Empty;
+        [Required(ErrorMessage = RequiredField)]
+        public int WorkCategoryId { get; set; }
+        public IEnumerable<WorkCategoryViewModel> WorkCategories { get; set; } = new List<WorkCategoryViewModel>();
+
     }
 }
