@@ -23,5 +23,6 @@ namespace HotelBrowser.Infrastructure.Data.Models
         public const string RequiredField = "The field {0} is required!";
         public const string StringLengthField = "The field {0} must be between {2} and {1} long.";
         public const string ImageErrorMessage = "The field {0} can not be more than {1}";
+        public const string LocationErrorMessage = "The field {0} must be in format ul/bul. StreetNameNumber";
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 
 namespace HotelBrowser.Controllers
@@ -29,12 +30,12 @@ namespace HotelBrowser.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var model = new AllHotelsViewModel();
+            var model = new AddAndEditHotelsViewModel();
             model.WorkCategories = await GetWorkCategories();
 			return View(model);
 		}
         [HttpPost]
-        public async Task<IActionResult> AddAsync(AllHotelsViewModel model)
+        public async Task<IActionResult> AddAsync(AddAndEditHotelsViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -56,6 +57,92 @@ namespace HotelBrowser.Controllers
                 await data.Hotels.AddAsync(hotel);
                 await data.SaveChangesAsync();
                 return RedirectToAction(nameof(AllHotels));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var hotel = await data.Hotels.FindAsync(id);
+            if (hotel == null)
+            {
+                return NotFound();
+            }
+            var model = new AddAndEditHotelsViewModel
+            {
+                Id = hotel.Id,
+                Name = hotel.Name,
+                Location = hotel.Location,
+                Image = hotel.Image,
+                Description = hotel.Description,
+                FreeRooms = hotel.FreeRooms,
+                Phone = hotel.Phone,
+                WorkCategoryId = hotel.WorkCategoryId,
+                WorkCategories = await GetWorkCategories()
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(AddAndEditHotelsViewModel model, int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.WorkCategories = await GetWorkCategories();
+                return View(model);
+            }
+            var hotel = await data.Hotels.FindAsync(id);
+            if (hotel == null)
+            {
+                return BadRequest();
+            }
+            if (hotel.OwnerId != GetUserId())
+            {
+                return Unauthorized();
+            }
+            hotel.Id = model.Id;
+            hotel.Name = model.Name;
+            hotel.Location = model.Location;
+            hotel.Image = model.Image;
+            hotel.Description = model.Description;
+            hotel.FreeRooms = model.FreeRooms;
+            hotel.Phone = model.Phone;
+            hotel.WorkCategoryId = model.WorkCategoryId;
+            await data.SaveChangesAsync();
+
+            return RedirectToAction(nameof(AllHotels));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var hotel = await data.Hotels.FindAsync(id);
+            if (hotel == null)
+            {
+                return BadRequest();
+            }
+            if (hotel.OwnerId != GetUserId())
+            {
+                return Unauthorized();
+            }
+            var model = new DeleteViewModel
+            {
+                Id = hotel.Id,
+                Name = hotel.Name
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(DeleteViewModel model)
+        {
+            var hotel = await data.Hotels.FindAsync(model.Id);
+            if (hotel == null)
+            {
+                return BadRequest();
+            }
+            if (hotel.OwnerId != GetUserId())
+            {
+                return Unauthorized();
+            }
+            data.Hotels.Remove(hotel);
+            await data.SaveChangesAsync();
+            return RedirectToAction(nameof(AllHotels));
         }
         private async Task<IEnumerable<WorkCategoryViewModel>> GetWorkCategories()
         {
