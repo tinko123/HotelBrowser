@@ -12,24 +12,25 @@ namespace HotelBrowser.Core.Services
         {
             repository = _repository;
         }
-        public Task CreateAsync(string userId, string phoneNumber)
+        public async Task CreateAsync(string userId, string phoneNumber)
         {
-            throw new NotImplementedException();
+            await repository.AddAsync(new HotelOwner
+            {
+                UserId = userId,
+                PhoneNumber = phoneNumber
+            });
+            await repository.SaveChangesAsync();
         }
 
         public async Task<bool> ExistByIdAsync(string userId)
         {
             return await repository.AllReadOnly<HotelOwner>()
                 .AnyAsync(o => o.UserId == userId);
-        }
-
-        public Task<bool> UserHasRentsAsync(string userId)
+        }  
+        public async Task<bool> UserWithPhoneNumberExistAsync(string phoneNumber)
         {
-            throw new NotImplementedException();
-        }
-        public Task<bool> UserWithPhoneNumberExistAsync(string phoneNumber)
-        {
-            throw new NotImplementedException();
+            return await repository.AllReadOnly<HotelOwner>()
+                .AnyAsync(o => o.PhoneNumber == phoneNumber);
         }
     }
 }
