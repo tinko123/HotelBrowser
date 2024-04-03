@@ -1,6 +1,7 @@
 ﻿using HotelBrowser.Core.Contracts;
 using HotelBrowser.Core.Models.Home;
 using HotelBrowser.Core.Models.Hotel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -13,6 +14,7 @@ namespace HotelBrowser.Controllers
 		{
 			hotelService = _hotelService;
 		}
+		[AllowAnonymous]
 		public async Task<IActionResult> Index()
 		{
 			if (User?.Identities != null && User.Identity.IsAuthenticated)
