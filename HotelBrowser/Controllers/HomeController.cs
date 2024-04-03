@@ -21,8 +21,8 @@ namespace HotelBrowser.Controllers
 			{
 				return RedirectToAction("AllHotels", "Hotel");
 			}
-			IEnumerable<AllHotelsViewModel> model = await hotelService.AllHotelsAsync();
-			return View(model);
+			var hotel = await hotelService.FirstThreeHotels();
+			return View(hotel);
 		}
 
         public IActionResult Error()

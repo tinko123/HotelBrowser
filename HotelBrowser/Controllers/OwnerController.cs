@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HotelBrowser.Core.Models.Owner;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBrowser.Controllers
 {
     public class OwnerController : BaseController
     {
-        public IActionResult Become()
+        public IActionResult Become(BecomeOwnerViewModel owner)
         {
-            return View();
+            return RedirectToAction(nameof(HotelController.AllHotels),"Hotels");
         }
     }
 }
