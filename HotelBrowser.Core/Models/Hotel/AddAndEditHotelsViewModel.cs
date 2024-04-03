@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static HotelBrowser.Infrastructure.Data.Models.Constants;
+using static HotelBrowser.Infrastructure.Constants.Constants;
 
 namespace HotelBrowser.Core.Models.Hotel
 {

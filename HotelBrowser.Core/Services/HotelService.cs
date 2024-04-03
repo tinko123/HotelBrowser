@@ -6,15 +6,16 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore;
 using System.Security.Claims;
 using HotelBrowser.Core.Models.Hotel;
+using HotelBrowser.Infrastructure.Data.Common;
 
 namespace HotelBrowser.Core.Services
 {
     public class HotelService : IHotelService
     {
-        private readonly HotelBrowserDbContext data;
-        public HotelService(HotelBrowserDbContext context)
+        private readonly IRepository repository;
+        public HotelService(IRepository _repository)
         {
-            data = context;
+            repository = _repository;
         }
 
         public Task AddAsync(AllHotelsViewModel model)
@@ -24,7 +25,7 @@ namespace HotelBrowser.Core.Services
 
         public  async Task<IEnumerable<AllHotelsViewModel>> AllHotelsAsync()
         {
-            return await data.Hotels
+            return await repository.All<Hotel>()
                 .Select(h => new AllHotelsViewModel
                 {
                     Id = h.Id,
@@ -43,16 +44,17 @@ namespace HotelBrowser.Core.Services
 
         public async Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotels()
         {
-            return data
-                .Hotels
+            return await repository
+                .AllReadOnly<Hotel>()
                 .OrderByDescending(h => h.Id)
+                .Take(3)
                 .Select(h => new HotelIndexServiceModel
                 {
                     Id = h.Id,
                     Name = h.Name,
                     ImageURL = h.Image
                 })
-                .Take(3);
+                .ToListAsync();
         }
     }
 }

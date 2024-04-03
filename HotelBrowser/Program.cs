@@ -1,5 +1,6 @@
 using HotelBrowser.Core.Contracts;
 using HotelBrowser.Core.Services;
+using HotelBrowser.Infrastructure.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,6 @@ builder.Services.AddApplicationIdentity(builder.Configuration);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddApplicationServices();
-builder.Services.AddTransient<IHotelService, HotelService>();
 
 var app = builder.Build();
 
