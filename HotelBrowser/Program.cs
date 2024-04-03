@@ -9,7 +9,7 @@ builder.Services.AddApplicationIdentity(builder.Configuration);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddApplicationServices();
-builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddTransient<IHotelService, HotelService>();
 
 var app = builder.Build();
 

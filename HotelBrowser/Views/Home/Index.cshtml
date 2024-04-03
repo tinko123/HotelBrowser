@@ -1,31 +1,51 @@
-﻿@model IEnumerable<AllHotelsViewModel>
-@{
-	ViewBag.Title = "Hotel Browser";
-}
-<h2 class="text-center">@ViewBag.Title</h2>
-<hr />
-
-
-@if (Model.Count() > 0)
-{
-	<div class="row">
-		@foreach (var hotel in Model)
+﻿@model IEnumerable<HotelIndexServiceModel> 
+@{ 
+	ViewData["Title"] = "Home Page";
+	var houses = Model.ToList();
+} 
+@if (!houses.Any()) 
+{ <div class="mt-4 p-5 bg-light">
+	<h1 class="display-4">Welcome to the best place for finding satisfaction for your holiday!</h1> 
+	<p class="lead"> 
+		There are no hotels in the system currently available so why don't you just add one?
+	</p>
+	<hr class="my-4">
+	<p class="lead"> 
+		@if (User.Identity.IsAuthenticated) 
 		{
-			<div class="col-sm-6">
-				<div class="card ">
-					<div class="card-body">
-						<img class="card-img-top" src=@hotel.Image>
-						<h4 class="card-title text-center">@hotel.Name</h4>
-						<p class="card-text">Location: @hotel.Location</p>
-						<p class="card-text">Telephone for reservations: @hotel.Phone</p>
-						<a asp-controller="Hotel" asp-action="AllHotels" class="btn btn-info">View More</a>
-					</div>
-				</div>
-			</div>
+			<a asp-controller="House" asp-action="Add" class="btn btn-primary btn-lg"
+			role="button">Add House</a> 
 		}
+		</p>
 	</div>
-}
-else
-{
-	<p class="text-center">No posts yet!</p>
-}
+} 
+		<div class="mb-5"></div>
+		<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-inner"> 
+				@for (int i = 0; i < houses.Count(); i++) 
+				{
+					var house = houses[i];
+					<div class="carousel-item @(i == 0 ? "active" : string.Empty)"> 
+						<img class="d-block w-100" style="height:500px" 
+						src="@house.ImageURL" alt="@house.Name">
+						<div class="carousel-caption d-none d-md-block">
+							<h5> 
+								<a class="btn btn-primary" asp-controller="House" asp-action="Details"
+								asp-route-id="@house.Id"> @house.Name</a> 
+							</h5> 
+						</div> 
+					</div> 
+				} 
+			</div> 
+			<button class="carousel-control-prev" type="button" data-bs
+			-target="#carouselExampleControls" data-bs-slide="prev"> 
+			<span class="carousel-control-prev-icon" aria-hidden="true">
+
+			</span> <span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+			data-bs-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span> 
+			<span class="visually-hidden">Next</span>
+			</button> 
+		</div>
