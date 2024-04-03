@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static HotelBrowser.Infrastructure.Data.Models.Constants;
+using static HotelBrowser.Infrastructure.Constants.Constants;
 
 namespace HotelBrowser.Infrastructure.Data.Models
 {
