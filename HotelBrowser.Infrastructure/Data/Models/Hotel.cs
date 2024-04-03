@@ -41,6 +41,10 @@ namespace HotelBrowser.Infrastructure.Data.Models
         [Comment("Hotel's location")]
         public string Location { get; set; } = string.Empty;
         [Required]
+        [Comment("Hotel's price for 1 night")]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Price { get; set; }
+        [Required]
         [MaxLength(ImageMaxLength)]
         [Comment("Hotel's image url")]
         public string Image { get; set; } = string.Empty;
