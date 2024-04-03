@@ -13,9 +13,9 @@ namespace HotelBrowser.Core.Services
     {
         private readonly HotelBrowserDbContext data;
         private readonly ILogger _logger;
-        public HotelService(HotelBrowserDbContext contex, ILogger<HotelService> logger)
+        public HotelService(HotelBrowserDbContext context, ILogger<HotelService> logger)
         {
-            data = contex;
+            data = context;
             _logger = logger;
         }
 
@@ -23,29 +23,6 @@ namespace HotelBrowser.Core.Services
         {
             throw new NotImplementedException();
         }
-
-        //public async Task AddAsync(AllHotelsViewModel model)
-        //{
-        //          var hotel = new Hotel()
-        //          {
-        //              Name = model.Name,
-        //		Location = model.Location,
-        //		Image = model.Image,
-        //		Description = model.Description,
-        //		FreeRooms = model.FreeRooms,
-        //		Phone = model.Phone,
-        //	};
-        //          try
-        //          {
-        //              await data.Hotels.AddAsync(hotel);
-        //		await data.SaveChangesAsync();
-        //	}
-        //          catch (Exception ex)
-        //          {
-        //              _logger.LogError(ex, "HotelServide.AddAsync");
-        //		throw new ApplicationException("Operation failed. Please, try again");
-        //	}
-        //}
 
         public  async Task<IEnumerable<AllHotelsViewModel>> AllHotelsAsync()
         {
@@ -65,20 +42,5 @@ namespace HotelBrowser.Core.Services
                 .AsNoTracking()
                 .ToListAsync();
         }
-        //private async Task<IEnumerable<WorkCategoryViewModel>> GetWorkCategories()
-        //{
-        //    return await data.WorkCategories
-        //        .AsNoTracking()
-        //        .Select(c => new WorkCategoryViewModel
-        //        {
-        //            Id = c.Id,
-        //            Name = c.Name
-        //        })
-        //        .ToListAsync();
-        //}
-        //private string GetUserId()
-        //{
-        //    return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-        //}
     }
 }
