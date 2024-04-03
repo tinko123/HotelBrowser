@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
+﻿
 
-namespace HotelBrowser.Extensions
+namespace System.Security.Claims
 {
     public static class ClaimsPrincipleExtentions
     {
