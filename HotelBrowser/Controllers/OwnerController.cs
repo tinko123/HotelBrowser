@@ -1,4 +1,5 @@
-﻿using HotelBrowser.Core.Contracts;
+﻿using HotelBrowser.Attributes;
+using HotelBrowser.Core.Contracts;
 using HotelBrowser.Core.Models.Owner;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -13,18 +14,25 @@ namespace HotelBrowser.Controllers
             ownerService = _ownerService;
         }
         [HttpGet]
+        [NotOwner]
         public async Task<IActionResult> Become()
         {
-            if(await ownerService.ExistByIdAsync(User.Id()))
-            {
-                return BadRequest();
-            }
             var model = new BecomeOwnerViewModel();
             return View(model);
         }
         [HttpPost]
-        public IActionResult Become(BecomeOwnerViewModel owner)
+        [NotOwner]
+        public async Task<IActionResult> Become(BecomeOwnerViewModel owner)
         {
+            if(await ownerService.UserWithPhoneNumberExistAsync(User.Id()))
+            {
+                ModelState.AddModelError(nameof(owner.phoneNumber), "Phone number is already in use.");
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(owner);
+            }
+            await ownerService.CreateAsync(User.Id(), owner.phoneNumber);
             return RedirectToAction(nameof(HotelController.AllHotels),"Hotels");
         }
     }
