@@ -12,11 +12,9 @@ namespace HotelBrowser.Core.Services
     public class HotelService : IHotelService
     {
         private readonly HotelBrowserDbContext data;
-        private readonly ILogger _logger;
-        public HotelService(HotelBrowserDbContext context, ILogger<HotelService> logger)
+        public HotelService(HotelBrowserDbContext context)
         {
             data = context;
-            _logger = logger;
         }
 
         public Task AddAsync(AllHotelsViewModel model)
@@ -41,6 +39,20 @@ namespace HotelBrowser.Core.Services
                 })
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotels()
+        {
+            return data
+                .Hotels
+                .OrderByDescending(h => h.Id)
+                .Select(h => new HotelIndexServiceModel
+                {
+                    Id = h.Id,
+                    Name = h.Name,
+                    ImageURL = h.Image
+                })
+                .Take(3);
         }
     }
 }
