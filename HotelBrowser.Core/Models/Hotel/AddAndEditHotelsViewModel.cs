@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static HotelBrowser.Infrastructure.Data.Models.Constants;
 
-namespace HotelBrowser.Core.Models
+namespace HotelBrowser.Core.Models.Hotel
 {
-    public class AllHotelsViewModel
+    public class AddAndEditHotelsViewModel
     {
         public int Id { get; set; }
         [Required(ErrorMessage = RequiredField)]
@@ -16,14 +15,11 @@ namespace HotelBrowser.Core.Models
         [StringLength(HotelMaxPhoneLength,
             MinimumLength = HotelMinPhoneLength,
             ErrorMessage = StringLengthField)]
+        [Display(Name = "Reservation Phone")]
         public string Phone { get; set; } = string.Empty;
         [Required(ErrorMessage = RequiredField)]
-        [StringLength(OwnerMaxNameLength,
-            MinimumLength = OwnerMinNameLength,
-            ErrorMessage = StringLengthField)]
-        public string Owner { get; set; } = string.Empty;
-        [Required(ErrorMessage = RequiredField)]
-        [Range(0,1000)]
+        [Range(0, 1000)]
+        [Display(Name = "Free Rooms")]
         public int FreeRooms { get; set; }
         [Required(ErrorMessage = RequiredField)]
         [StringLength(DecriptionMaxLength,
@@ -34,9 +30,10 @@ namespace HotelBrowser.Core.Models
         [StringLength(LocationMaxLength,
             MinimumLength = LocationMinLength,
             ErrorMessage = StringLengthField)]
+        [RegularExpression("(ul|bul)\\.([A-Za-z]|[A-Za-z].[A-Za-z])+\\s?\\d+", ErrorMessage = LocationErrorMessage)]
         public string Location { get; set; } = string.Empty;
         [Required(ErrorMessage = RequiredField)]
-        [MaxLength(ImageMaxLength,ErrorMessage = ImageErrorMessage)]
+        [MaxLength(ImageMaxLength, ErrorMessage = ImageErrorMessage)]
         public string Image { get; set; } = string.Empty;
         [Required(ErrorMessage = RequiredField)]
         public int WorkCategoryId { get; set; }

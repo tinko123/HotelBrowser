@@ -1,4 +1,4 @@
-﻿namespace HotelBrowser.Core.Models
+﻿namespace HotelBrowser.Core.Models.Hotel
 {
     public class WorkCategoryViewModel
     {

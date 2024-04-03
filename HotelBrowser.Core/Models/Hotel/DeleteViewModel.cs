@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotelBrowser.Core.Models
+namespace HotelBrowser.Core.Models.Hotel
 {
     public class DeleteViewModel
     {

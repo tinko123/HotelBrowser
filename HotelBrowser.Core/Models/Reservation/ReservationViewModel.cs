@@ -4,8 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HotelBrowser.Core.Models.Hotel;
 
-namespace HotelBrowser.Core.Models
+namespace HotelBrowser.Core.Models.Reservation
 {
     public class ReservationViewModel
     {
