@@ -1,4 +1,7 @@
-﻿using HotelBrowser.Infrastructure.Data;
+﻿using HotelBrowser.Core.Contracts;
+using HotelBrowser.Core.Services;
+using HotelBrowser.Infrastructure.Data;
+using HotelBrowser.Infrastructure.Data.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +11,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<IHotelService, HotelService>();
+            services.AddScoped<IOwnerService, OwnerService>();
             return services;
         }
 
@@ -18,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer(connectionString));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddScoped<IRepository, Repository>();
 
             return services;
         }
