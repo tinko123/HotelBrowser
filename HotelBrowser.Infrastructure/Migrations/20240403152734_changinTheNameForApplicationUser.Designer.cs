@@ -4,6 +4,7 @@ using HotelBrowser.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBrowser.Infrastructure.Migrations
 {
     [DbContext(typeof(HotelBrowserDbContext))]
-    partial class HotelBrowserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240403152734_changinTheNameForApplicationUser")]
+    partial class changinTheNameForApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,7 +91,7 @@ namespace HotelBrowser.Infrastructure.Migrations
 
                     b.HasIndex("WorkCategoryId");
 
-                    b.ToTable("Hotels", (string)null);
+                    b.ToTable("Hotels");
                 });
 
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.HotelOwner", b =>
@@ -119,7 +121,7 @@ namespace HotelBrowser.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Owners", (string)null);
+                    b.ToTable("Owners");
                 });
 
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.WorkCategory", b =>
@@ -139,7 +141,7 @@ namespace HotelBrowser.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkCategories", (string)null);
+                    b.ToTable("WorkCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
