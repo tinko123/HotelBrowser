@@ -2,9 +2,9 @@
 
 namespace HotelBrowser.Controllers
 {
-    public class ReservationController : BaseController
+    public class OwnerController : BaseController
     {
-        public IActionResult MakeReservation()
+        public IActionResult Become()
         {
             return View();
         }

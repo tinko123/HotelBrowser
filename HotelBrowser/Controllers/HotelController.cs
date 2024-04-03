@@ -1,5 +1,5 @@
 ﻿using HotelBrowser.Core.Contracts;
-using HotelBrowser.Core.Models;
+using HotelBrowser.Core.Models.Hotel;
 using HotelBrowser.Infrastructure.Data;
 using HotelBrowser.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +12,7 @@ using System.Security.Claims;
 namespace HotelBrowser.Controllers
 {
     [Authorize]
-	public class HotelController : Controller
+	public class HotelController : BaseController
     {
         private readonly IHotelService hotelService;
         private readonly HotelBrowserDbContext data;

@@ -1,12 +1,12 @@
 ﻿using HotelBrowser.Core.Contracts;
-using HotelBrowser.Core.Models;
-using HotelBrowser.Models;
+using HotelBrowser.Core.Models.Home;
+using HotelBrowser.Core.Models.Hotel;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace HotelBrowser.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
 		private readonly IHotelService hotelService;
 		public HomeController(IHotelService _hotelService)
