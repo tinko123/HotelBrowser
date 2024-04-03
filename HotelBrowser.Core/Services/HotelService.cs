@@ -1,11 +1,11 @@
 ﻿using HotelBrowser.Core.Contracts;
-using HotelBrowser.Core.Models;
 using HotelBrowser.Infrastructure.Data;
 using HotelBrowser.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore;
 using System.Security.Claims;
+using HotelBrowser.Core.Models.Hotel;
 
 namespace HotelBrowser.Core.Services
 {

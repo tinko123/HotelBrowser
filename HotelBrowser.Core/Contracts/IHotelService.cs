@@ -1,8 +1,8 @@
-﻿using HotelBrowser.Core.Models;
+﻿using HotelBrowser.Core.Models.Hotel;
 
 namespace HotelBrowser.Core.Contracts
 {
-	public interface IHotelService
+    public interface IHotelService
     {
         Task<IEnumerable<AllHotelsViewModel>> AllHotelsAsync();
 		Task AddAsync(AllHotelsViewModel model);
