@@ -52,7 +52,8 @@ namespace HotelBrowser.Controllers
                 FreeRooms = model.FreeRooms,
                 Phone = model.Phone,
                 WorkCategoryId = model.WorkCategoryId,
-                OwnerId = userId
+                OwnerId = userId,
+                Price = model.Price
             };
                 await data.Hotels.AddAsync(hotel);
                 await data.SaveChangesAsync();
@@ -75,6 +76,7 @@ namespace HotelBrowser.Controllers
                 Description = hotel.Description,
                 FreeRooms = hotel.FreeRooms,
                 Phone = hotel.Phone,
+                Price = hotel.Price,
                 WorkCategoryId = hotel.WorkCategoryId,
                 WorkCategories = await GetWorkCategories()
             };
@@ -104,6 +106,7 @@ namespace HotelBrowser.Controllers
             hotel.Description = model.Description;
             hotel.FreeRooms = model.FreeRooms;
             hotel.Phone = model.Phone;
+            hotel.Price = model.Price;
             hotel.WorkCategoryId = model.WorkCategoryId;
             await data.SaveChangesAsync();
 
