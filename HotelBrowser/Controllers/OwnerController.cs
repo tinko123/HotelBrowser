@@ -24,7 +24,7 @@ namespace HotelBrowser.Controllers
         [NotOwner]
         public async Task<IActionResult> Become(BecomeOwnerViewModel owner)
         {
-            if(await ownerService.UserWithPhoneNumberExistAsync(User.Id()))
+            if(await ownerService.UserWithPhoneNumberExistAsync(owner.phoneNumber))
             {
                 ModelState.AddModelError(nameof(owner.phoneNumber), "Phone number is already in use.");
             }
