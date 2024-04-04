@@ -1,7 +1,7 @@
 ﻿@model AddAndEditHotelsViewModel
 
 @{
-    ViewBag.Title = "Add Hotel";
+    ViewBag.Title = "Edit Hotel";
 }
 
 <h2 class="text-center">@ViewBag.Title</h2>
@@ -34,6 +34,11 @@
                 <label asp-for="Image"></label>
                 <input asp-for="Image" class="form-control" placeholder="Paste your url of the Image...">
                 <span asp-validation-for="@Model.Image" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control" placeholder="Price for one night here...">
+                <span asp-validation-for="@Model.Price" class="small text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="FreeRooms"></label>

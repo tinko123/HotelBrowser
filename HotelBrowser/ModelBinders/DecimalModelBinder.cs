@@ -18,7 +18,7 @@ namespace HotelBrowser.ModelBinders
                     strValue = strValue.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
                     strValue = strValue.Replace(",", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
 
-                    result = Convert.ToDecimal(valueProviderResult, CultureInfo.CurrentCulture);
+                    result = Convert.ToDecimal(strValue, CultureInfo.CurrentCulture);
                     success = true;
                 }
                 catch (FormatException ex)

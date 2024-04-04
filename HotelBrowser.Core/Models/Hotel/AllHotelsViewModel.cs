@@ -35,7 +35,12 @@ namespace HotelBrowser.Core.Models.Hotel
             MinimumLength = LocationMinLength,
             ErrorMessage = StringLengthField)]
         public string Location { get; set; } = string.Empty;
-        [Required(ErrorMessage = RequiredField)]
+		[Required]
+		[Range(typeof(decimal),"0.00", MaxPriceForOneNight,
+	ErrorMessage = "Price for one night must be a positive number and less then {2} leva.")]
+		[Display(Name = "Price for one night")]
+		public decimal Price { get; set; }
+		[Required(ErrorMessage = RequiredField)]
         [MaxLength(ImageMaxLength, ErrorMessage = ImageErrorMessage)]
         public string Image { get; set; } = string.Empty;
         [Required(ErrorMessage = RequiredField)]

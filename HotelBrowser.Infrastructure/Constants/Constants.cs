@@ -26,5 +26,6 @@ namespace HotelBrowser.Infrastructure.Constants
         public const string LocationErrorMessage = "The field {0} must be in format ul/bul. StreetNameNumber";
         public const int OwnerPhoneMaxLength = 15;
         public const int OwnerPhoneMinLength = 7;
+        public const string MaxPriceForOneNight = "800";
     }
 }
