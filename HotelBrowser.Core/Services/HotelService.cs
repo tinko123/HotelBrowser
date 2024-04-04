@@ -10,7 +10,7 @@ using HotelBrowser.Infrastructure.Data.Common;
 
 namespace HotelBrowser.Core.Services
 {
-    public class HotelService : IHotelService
+	public class HotelService : IHotelService
     {
         private readonly IRepository repository;
         public HotelService(IRepository _repository)
@@ -23,7 +23,18 @@ namespace HotelBrowser.Core.Services
             throw new NotImplementedException();
         }
 
-        public  async Task<IEnumerable<AllHotelsViewModel>> AllHotelsAsync()
+		public async Task<IEnumerable<WorkCategoryViewModel>> AllCategories()
+		{
+            return await repository.AllReadOnly<WorkCategory>()
+				.Select(w => new WorkCategoryViewModel
+                {
+					Id = w.Id,
+					Name = w.Name
+				})
+				.ToListAsync();
+		}
+
+		public  async Task<IEnumerable<AllHotelsViewModel>> AllHotelsAsync()
         {
             return await repository.All<Hotel>()
                 .Select(h => new AllHotelsViewModel
@@ -34,6 +45,7 @@ namespace HotelBrowser.Core.Services
                     Image = h.Image,
                     Description = h.Description,
                     FreeRooms = h.FreeRooms, 
+                    Price = h.Price,
                     Owner = h.Owner.UserName,
                     Phone = h.Phone
 

@@ -7,5 +7,6 @@ namespace HotelBrowser.Core.Contracts
         Task<IEnumerable<AllHotelsViewModel>> AllHotelsAsync();
 		Task AddAsync(AllHotelsViewModel model);
         Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotels();
+        Task<IEnumerable<WorkCategoryViewModel>> AllCategories();
 	}
 }
