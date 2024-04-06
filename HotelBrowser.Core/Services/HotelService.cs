@@ -23,7 +23,7 @@ namespace HotelBrowser.Core.Services
             throw new NotImplementedException();
         }
 
-		public async Task<IEnumerable<WorkCategoryViewModel>> AllCategories()
+		public async Task<IEnumerable<WorkCategoryViewModel>> AllCategoriesAsync()
 		{
             return await repository.AllReadOnly<WorkCategory>()
 				.Select(w => new WorkCategoryViewModel
@@ -44,9 +44,8 @@ namespace HotelBrowser.Core.Services
                     Location = h.Location,
                     Image = h.Image,
                     Description = h.Description,
-                    FreeRooms = h.FreeRooms, 
+                    FreeRooms = h.FreeRooms,
                     Price = h.Price,
-                    Owner = h.Owner.UserName,
                     Phone = h.Phone
 
                 })
@@ -54,7 +53,31 @@ namespace HotelBrowser.Core.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotels()
+		public async Task<bool> CategoryExistAsync(int id)
+		{
+            return await repository.AllReadOnly<WorkCategory>().AnyAsync(w => w.Id == id);
+		}
+
+		public async Task<int> CreateAsync(AddAndEditHotelsViewModel model,int idOwner)
+		{
+            Hotel hotel = new Hotel
+            {
+                Name = model.Name,
+                Location = model.Location,
+                Image = model.Image,
+                Description = model.Description,
+                FreeRooms = model.FreeRooms,
+                Price = model.Price,
+                OwnerId = idOwner,
+                Phone = model.Phone,
+                WorkCategoryId = model.WorkCategoryId
+            };
+            await repository.AddAsync(hotel);
+            await repository.SaveChangesAsync();
+            return hotel.Id;
+		}
+
+		public async Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotelsAsync()
         {
             return await repository
                 .AllReadOnly<Hotel>()

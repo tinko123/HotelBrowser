@@ -26,8 +26,15 @@ namespace HotelBrowser.Core.Services
         {
             return await repository.AllReadOnly<HotelOwner>()
                 .AnyAsync(o => o.UserId == userId);
-        }  
-        public async Task<bool> UserWithPhoneNumberExistAsync(string phoneNumber)
+        }
+
+		public async Task<int?> GetOwnerIdAsync(string userId)
+		{
+            return (await repository.AllReadOnly<HotelOwner>()
+                .FirstOrDefaultAsync(o => o.UserId == userId))?.Id;
+		}
+
+		public async Task<bool> UserWithPhoneNumberExistAsync(string phoneNumber)
         {
             return await repository.AllReadOnly<HotelOwner>()
                 .AnyAsync(o => o.PhoneNumber == phoneNumber);

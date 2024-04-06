@@ -21,7 +21,7 @@ namespace HotelBrowser.Controllers
 			{
 				return RedirectToAction("AllHotels", "Hotel");
 			}
-			var hotel = await hotelService.FirstThreeHotels();
+			var hotel = await hotelService.FirstThreeHotelsAsync();
 			return View(hotel);
 		}
 

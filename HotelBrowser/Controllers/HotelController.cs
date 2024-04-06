@@ -1,4 +1,5 @@
-﻿using HotelBrowser.Core.Contracts;
+﻿using HotelBrowser.Attributes;
+using HotelBrowser.Core.Contracts;
 using HotelBrowser.Core.Models.Hotel;
 using HotelBrowser.Infrastructure.Data;
 using HotelBrowser.Infrastructure.Data.Models;
@@ -15,11 +16,15 @@ namespace HotelBrowser.Controllers
 	public class HotelController : BaseController
     {
         private readonly IHotelService hotelService;
+        private readonly IOwnerService ownerService;
         private readonly HotelBrowserDbContext data;
-        public HotelController(IHotelService _hotelService, HotelBrowserDbContext context)
+        public HotelController(IHotelService _hotelService,
+            HotelBrowserDbContext context,
+            IOwnerService _ownerService)
         {
             data = context;
             hotelService = _hotelService;
+            ownerService = _ownerService;
         }
         public async Task<IActionResult> AllHotels()
         
@@ -28,36 +33,33 @@ namespace HotelBrowser.Controllers
             return View(model);
         }
         [HttpGet]
+        [MustBeOwner]
         public async Task<IActionResult> Add()
         {
-            var model = new AddAndEditHotelsViewModel();
-            model.WorkCategories = await GetWorkCategories();
+			var model = new AddAndEditHotelsViewModel()
+            {
+               WorkCategories = await hotelService.AllCategoriesAsync()
+            };
 			return View(model);
 		}
         [HttpPost]
+        [MustBeOwner]
         public async Task<IActionResult> AddAsync(AddAndEditHotelsViewModel model)
         {
+
+            if(await hotelService.CategoryExistAsync(model.WorkCategoryId) == false)
+            {
+				ModelState.AddModelError(nameof(model.WorkCategoryId), "Category does not exist.");
+			}
             if (!ModelState.IsValid)
             {
-                model.WorkCategories = await GetWorkCategories();
-                return View(model);
-            }
-            var userId = GetUserId();
-            var hotel = new Hotel()
-            {
-                Name = model.Name,
-                Location = model.Location,
-                Image = model.Image,
-                Description = model.Description,
-                FreeRooms = model.FreeRooms,
-                Phone = model.Phone,
-                WorkCategoryId = model.WorkCategoryId,
-                OwnerId = userId,
-                Price = model.Price
-            };
-                await data.Hotels.AddAsync(hotel);
-                await data.SaveChangesAsync();
-                return RedirectToAction(nameof(AllHotels));
+				model.WorkCategories = await hotelService.AllCategoriesAsync();
+				return View(model);
+			}
+			int? ownerId = await ownerService.GetOwnerIdAsync(User.Id());
+			int newHotel = await hotelService.CreateAsync(model,ownerId ?? 0);
+			return RedirectToAction(nameof(AllHotels));
+
         }
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -85,66 +87,43 @@ namespace HotelBrowser.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(AddAndEditHotelsViewModel model, int id)
         {
-            if (!ModelState.IsValid)
-            {
-                model.WorkCategories = await GetWorkCategories();
-                return View(model);
-            }
-            var hotel = await data.Hotels.FindAsync(id);
-            if (hotel == null)
-            {
-                return BadRequest();
-            }
-            if (hotel.OwnerId != GetUserId())
-            {
-                return Unauthorized();
-            }
-            hotel.Id = model.Id;
-            hotel.Name = model.Name;
-            hotel.Location = model.Location;
-            hotel.Image = model.Image;
-            hotel.Description = model.Description;
-            hotel.FreeRooms = model.FreeRooms;
-            hotel.Phone = model.Phone;
-            hotel.Price = model.Price;
-            hotel.WorkCategoryId = model.WorkCategoryId;
-            await data.SaveChangesAsync();
 
             return RedirectToAction(nameof(AllHotels));
         }
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var hotel = await data.Hotels.FindAsync(id);
-            if (hotel == null)
-            {
-                return BadRequest();
-            }
-            if (hotel.OwnerId != GetUserId())
-            {
-                return Unauthorized();
-            }
-            var model = new DeleteViewModel
-            {
-                Id = hotel.Id,
-                Name = hotel.Name
-            };
-            return View(model);
+            //var hotel = await data.Hotels.FindAsync(id);
+            //if (hotel == null)
+            //{
+            //    return BadRequest();
+            //}
+            //if (hotel.OwnerId != GetUserId())
+            //{
+            //    return Unauthorized();
+            //}
+            //var model = new DeleteViewModel
+            //{
+            //    Id = hotel.Id,
+            //    Name = hotel.Name
+            //};
+            // return View(model);
+            return View();
         }
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(DeleteViewModel model)
         {
-            var hotel = await data.Hotels.FindAsync(model.Id);
-            if (hotel == null)
-            {
-                return BadRequest();
-            }
-            if (hotel.OwnerId != GetUserId())
-            {
-                return Unauthorized();
-            }
-            data.Hotels.Remove(hotel);
-            await data.SaveChangesAsync();
+            //var hotel = await data.Hotels.FindAsync(model.Id);
+            //if (hotel == null)
+            //{
+            //    return BadRequest();
+            //}
+            //if (hotel.OwnerId != GetUserId())
+            //{
+            //    return Unauthorized();
+            //}
+            //data.Hotels.Remove(hotel);
+            //await data.SaveChangesAsync();
             return RedirectToAction(nameof(AllHotels));
         }
         private async Task<IEnumerable<WorkCategoryViewModel>> GetWorkCategories()
