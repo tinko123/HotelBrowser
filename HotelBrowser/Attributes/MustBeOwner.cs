@@ -22,7 +22,7 @@ namespace HotelBrowser.Attributes
 			if (agentService != null
 				&& agentService.ExistByIdAsync(context.HttpContext.User.Id()).Result == false)
 			{
-				context.Result = new RedirectToActionResult(nameof(OwnerController.Become), "Agent", null);
+				context.Result = new RedirectToActionResult(nameof(OwnerController.Become), "Owner", null);
 			}
 		}
 	}
