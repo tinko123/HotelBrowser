@@ -1,0 +1,16 @@
+﻿@model AddAndEditHotelsViewModel
+
+@{
+    ViewBag.Title = "Edit Hotel";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<partial name="_AddAndEditPartial" model="@Model" />
+<div class="mb-3">
+    <input class="btn btn-primary mt-3" type="submit" value="Edit" />
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,29 +1,31 @@
-﻿using HotelBrowser.Models;
+﻿using HotelBrowser.Core.Contracts;
+using HotelBrowser.Core.Models.Home;
+using HotelBrowser.Core.Models.Hotel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace HotelBrowser.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private readonly ILogger<HomeController> _logger;
+		private readonly IHotelService hotelService;
+		public HomeController(IHotelService _hotelService)
+		{
+			hotelService = _hotelService;
+		}
+		[AllowAnonymous]
+		public async Task<IActionResult> Index()
+		{
+			if (User?.Identities != null && User.Identity.IsAuthenticated)
+			{
+				return RedirectToAction("AllHotels", "Hotel");
+			}
+			var hotel = await hotelService.FirstThreeHotelsAsync();
+			return View(hotel);
+		}
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		[AllowAnonymous]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
