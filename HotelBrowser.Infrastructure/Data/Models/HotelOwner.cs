@@ -24,6 +24,6 @@ namespace HotelBrowser.Infrastructure.Data.Models
         [ForeignKey(nameof(UserId))]
         public AppUser User { get; set; } = null!;
 
-        public List<Hotel> Houses { get; set; } = new List<Hotel>();
+        public List<Hotel> Hotels { get; set; } = new List<Hotel>();
     }
 }

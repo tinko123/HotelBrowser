@@ -28,6 +28,9 @@ namespace HotelBrowser.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -168,6 +171,26 @@ namespace HotelBrowser.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Owners",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, comment: "Agent identifier")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false, comment: "Owner's phone"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "User Identifier")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Owners", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Owners_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Hotels",
                 columns: table => new
                 {
@@ -176,19 +199,26 @@ namespace HotelBrowser.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Hotel name"),
                     Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false, comment: "Hotel receptionis's phone fo booking"),
                     WorkCategoryId = table.Column<int>(type: "int", nullable: false, comment: "WorkCategory identifier"),
+                    OwnerId = table.Column<int>(type: "int", nullable: false, comment: "Owner of the hotel"),
                     FreeRooms = table.Column<int>(type: "int", nullable: false, comment: "How many rooms are free to use"),
                     Description = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false, comment: "Hotel's description"),
                     Location = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false, comment: "Hotel's location"),
-                    Image = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false, comment: "Hotel's image url"),
-                    OwnerId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "Hotel's owner identifier")
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false, comment: "Hotel's price for 1 night"),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Hotel's image url"),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true, comment: "Hotel's cumtomer")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Hotels", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Hotels_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
+                        name: "FK_Hotels_AspNetUsers_CustomerId",
+                        column: x => x.CustomerId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Hotels_Owners_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Owners",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -202,7 +232,7 @@ namespace HotelBrowser.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "WorkCategories",
                 columns: new[] { "Id", "Name" },
-                values: new object[] { 1, "All year" });
+                values: new object[] { 1, "All-Year" });
 
             migrationBuilder.InsertData(
                 table: "WorkCategories",
@@ -254,6 +284,11 @@ namespace HotelBrowser.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Hotels_CustomerId",
+                table: "Hotels",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Hotels_OwnerId",
                 table: "Hotels",
                 column: "OwnerId");
@@ -262,6 +297,18 @@ namespace HotelBrowser.Infrastructure.Migrations
                 name: "IX_Hotels_WorkCategoryId",
                 table: "Hotels",
                 column: "WorkCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Owners_PhoneNumber",
+                table: "Owners",
+                column: "PhoneNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Owners_UserId",
+                table: "Owners",
+                column: "UserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -288,10 +335,13 @@ namespace HotelBrowser.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Owners");
 
             migrationBuilder.DropTable(
                 name: "WorkCategories");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

@@ -15,5 +15,6 @@ namespace HotelBrowser.Infrastructure.Data.Models
         [MaxLength(OwnerMaxNameLength)]
         [PersonalData]
         public string LastName { get; set; } = string.Empty;
+		public HotelOwner? Owner { get; set; }
     }
 }

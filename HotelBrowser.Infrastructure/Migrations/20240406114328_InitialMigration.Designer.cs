@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBrowser.Infrastructure.Migrations
 {
     [DbContext(typeof(HotelBrowserDbContext))]
-    [Migration("20240403161157_SeedDB")]
-    partial class SeedDB
+    [Migration("20240406114328_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,10 @@ namespace HotelBrowser.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("Hotel's cumtomer");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1500)
@@ -43,13 +47,9 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasComment("How many rooms are free to use");
 
-                    b.Property<int?>("HotelOwnerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)")
+                        .HasColumnType("nvarchar(max)")
                         .HasComment("Hotel's image url");
 
                     b.Property<string>("Location")
@@ -64,10 +64,9 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasComment("Hotel name");
 
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasComment("Hotel's owner identifier");
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int")
+                        .HasComment("Owner of the hotel");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -85,7 +84,7 @@ namespace HotelBrowser.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HotelOwnerId");
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("OwnerId");
 
@@ -119,7 +118,8 @@ namespace HotelBrowser.Infrastructure.Migrations
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Owners");
                 });
@@ -388,12 +388,12 @@ namespace HotelBrowser.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Hotel", b =>
                 {
-                    b.HasOne("HotelBrowser.Infrastructure.Data.Models.HotelOwner", null)
-                        .WithMany("Houses")
-                        .HasForeignKey("HotelOwnerId");
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                    b.HasOne("HotelBrowser.Infrastructure.Data.Models.AppUser", "Customer")
                         .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.HasOne("HotelBrowser.Infrastructure.Data.Models.HotelOwner", "Owner")
+                        .WithMany("Hotels")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -404,6 +404,8 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Customer");
+
                     b.Navigation("Owner");
 
                     b.Navigation("WorkCategory");
@@ -412,8 +414,8 @@ namespace HotelBrowser.Infrastructure.Migrations
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.HotelOwner", b =>
                 {
                     b.HasOne("HotelBrowser.Infrastructure.Data.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("Owner")
+                        .HasForeignKey("HotelBrowser.Infrastructure.Data.Models.HotelOwner", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -473,12 +475,17 @@ namespace HotelBrowser.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.HotelOwner", b =>
                 {
-                    b.Navigation("Houses");
+                    b.Navigation("Hotels");
                 });
 
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.WorkCategory", b =>
                 {
                     b.Navigation("Hotels");
+                });
+
+            modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.AppUser", b =>
+                {
+                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }

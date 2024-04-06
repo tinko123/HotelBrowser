@@ -23,12 +23,11 @@ namespace HotelBrowser.Infrastructure.Data.Models
         [Required]
         [Comment("WorkCategory identifier")]
         public int WorkCategoryId { get; set; }
-        [ForeignKey(nameof(WorkCategoryId))]
+        //[ForeignKey(nameof(WorkCategoryId))]
         public WorkCategory WorkCategory { get; set; } = null!;
         [Required]
-        [MaxLength(OwnerMaxNameLength)]
         [Comment("Owner of the hotel")]
-        public IdentityUser Owner { get; set; } = null!;
+        public int OwnerId { get; set; }
         [Required]
         [Comment("How many rooms are free to use")]
         public int FreeRooms { get; set; }
@@ -45,10 +44,12 @@ namespace HotelBrowser.Infrastructure.Data.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         [Required]
-        [MaxLength(ImageMaxLength)]
         [Comment("Hotel's image url")]
         public string Image { get; set; } = string.Empty;
-        [Comment("Hotel's owner identifier")]
-        public string? OwnerId { get; set; }
+        [Comment("Hotel's cumtomer")]
+        public string? CustomerId { get; set; }
+        [ForeignKey(nameof(CustomerId))]
+        public AppUser? Customer { get; set; }
+        public HotelOwner Owner { get; set; } = null!;
     }
 }
