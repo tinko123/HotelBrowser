@@ -33,7 +33,9 @@ namespace HotelBrowser.Core.Models.Hotel
         [RegularExpression("(ul|bul)\\.([A-Za-z]|[A-Za-z].[A-Za-z])+\\s?\\d+", ErrorMessage = LocationErrorMessage)]
         public string Location { get; set; } = string.Empty;
         [Required]
-		[Range(typeof(decimal), "0.00", MaxPriceForOneNight,
+		[Range(typeof(decimal),
+            MinPriceForOneNight,
+            MaxPriceForOneNight,
 			ErrorMessage = "Price for one night must be a positive number and less then {2} leva.")]
         [Display(Name = "Price for one night")]
         public decimal Price { get; set; }
