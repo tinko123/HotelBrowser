@@ -57,7 +57,7 @@ namespace HotelBrowser.Controllers
 				return View(model);
 			}
 			int? ownerId = await ownerService.GetOwnerIdAsync(User.Id());
-			int newHotel = await hotelService.CreateAsync(model,ownerId ?? 0);
+			await hotelService.CreateAsync(model,ownerId ?? 0);
 			return RedirectToAction(nameof(AllHotels));
 
         }
