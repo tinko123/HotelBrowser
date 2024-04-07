@@ -25,18 +25,10 @@
 						<p class="card-text">Location: @hotel.Location</p>
 						<p class="card-text">Price for one night: @hotel.Price leva</p>
 						<p class="card-text">Number of free rooms: @hotel.FreeRooms</p>
-						<div class="d-grid gap-2 mb-2">
-							<a asp-controller="Booking" asp-action="MakeReservation" class="btn btn-success">Make Reservation</a>
-						</div>
-						@if (User?.Identity?.Name == hotel.Owner)
-						{
-							<div class="d-grid gap-2 mb-2">
-							<a asp-controller="Hotel" asp-action="Edit" asp-route-id="@hotel.Id" class="btn btn-warning">Edit Hotel Information</a>
-							</div>
-							<div class="d-grid gap-2 mb-2">
-								<a asp-controller="Hotel" asp-action="Delete" asp-route-id="@hotel.Id" class="btn btn-danger">Delete Hotel</a>
-							</div>
-						}
+                        <form class="input-group-sm" asp-controller="Reservation"
+                              asp-area="" asp-action="MakeReservation" asp-route-id="@hotel.Id" method="post">
+                            <input class="btn btn-primary" type="submit" value="Make Reservation" />
+                        </form>
 					</div>
 				</div>
 			</div>
@@ -167,6 +159,6 @@ else
 <div class="row">
     @foreach (var hotel in Model.Hotels)
     {
-        <partial name="_AddAndEditPartial" model="@hotel" />
+        <partial name="_HotelPartial" model="@hotel" />
     }
 </div> *@

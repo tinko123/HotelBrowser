@@ -7,10 +7,62 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
-<partial name="_AddAndEditPartial" model="@Model" />
-<div class="mb-3">
-    <input class="btn btn-primary mt-3" type="submit" value="Create" />
+<div class="row">
+    <form method="post">
+        <div class="form-group">
+            <div class="mb-3">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" placeholder="Write your name of the hotel here...">
+                <span asp-validation-for="@Model.Name" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description"></label>
+                <input asp-for="Description" class="form-control" placeholder="Write your description here..">
+                <span asp-validation-for="@Model.Description" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Location"></label>
+                <input asp-for="Location" class="form-control" placeholder="Write your location here...">
+                <span asp-validation-for="@Model.Location" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" class="form-control" placeholder="Write your secretary phone here...">
+                <span asp-validation-for="@Model.Phone" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Image"></label>
+                <input asp-for="Image" class="form-control" placeholder="Paste your url of the Image...">
+                <span asp-validation-for="@Model.Image" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control" placeholder="Price for one night here...">
+                <span asp-validation-for="@Model.Price" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="FreeRooms"></label>
+                <input asp-for="FreeRooms" class="form-control" placeholder="Write a number of free rooms you have...">
+                <span asp-validation-for="@Model.FreeRooms" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.WorkCategoryId" class="form-label-add-edit">Select Work Category</label>
+                <select asp-for="@Model.WorkCategoryId" class="form-control" aria-required="true">
+                    <option disabled selected value="">Select Work Category...</option>
+                    @foreach (var category in Model.WorkCategories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.WorkCategoryId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <input class="btn btn-primary mt-3" type="submit" value="Create" />
+        </div>
+    </form>
 </div>
+
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }

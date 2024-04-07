@@ -50,6 +50,22 @@ namespace HotelBrowser.Controllers
             return View(model);
         }
         [HttpGet]
+        public async Task<IActionResult> MyHotels() 
+        {
+            var userId = User.Id();
+            IEnumerable<HotelServiceModel> model;
+            if(await ownerService.ExistByIdAsync(userId))
+            {
+                var ownerId = await ownerService.GetOwnerIdAsync(userId);
+                model = await hotelService.AllHotelsByOwnerAsync(ownerId ?? 0);
+            }
+            else
+            {
+                model = await hotelService.AllHotelsByUserAsync(userId);
+            }
+            return View(model);
+        }
+        [HttpGet]
         [MustBeOwner]
         public async Task<IActionResult> Add()
         {

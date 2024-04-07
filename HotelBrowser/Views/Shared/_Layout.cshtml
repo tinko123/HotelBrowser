@@ -22,10 +22,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Hotel" asp-action="Add">Add Hotel</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Hotel" asp-action="AllHotels">All Hotels</a>
+                        </li>
                         @if (this.User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Hotel" asp-action="AllHotels">My Hotels</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Hotel" asp-action="MyHotels">My Hotels</a>
                             </li>
                         }
                     </ul>

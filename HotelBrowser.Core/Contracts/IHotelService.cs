@@ -21,5 +21,7 @@ namespace HotelBrowser.Core.Contracts
             int currentPage = 1,
             int hotelsPerPage = 1);
         Task<IEnumerable<string>> AllWorkCategoriesAsync();
- 	}
+        Task<IEnumerable<HotelServiceModel>> AllHotelsByOwnerAsync(int ownerId);
+        Task<IEnumerable<HotelServiceModel>> AllHotelsByUserAsync(string userId);
+    }
 }

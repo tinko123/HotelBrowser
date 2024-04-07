@@ -63,16 +63,7 @@ namespace HotelBrowser.Core.Services
             var hotels = await hotelsQuery
                 .Skip((currentPage - 1) * hotelsPerPage)
                 .Take(hotelsPerPage)
-                .Select(h => new HotelServiceModel
-                {
-                    Id = h.Id,
-                    Name = h.Name,
-                    PricePerNight = h.Price,
-                    Location = h.Location,
-                    PhoneNumber = h.Phone,
-                    Description = h.Description,
-                    ImageUrl = h.Image,
-                })
+                .ProjectToHotelServiceModel()
                 .ToListAsync();
             var totalHotels = await hotelsQuery.CountAsync();
             return new HotelQueryServiceModel
@@ -110,6 +101,22 @@ namespace HotelBrowser.Core.Services
 
                 })
                 .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<HotelServiceModel>> AllHotelsByOwnerAsync(int ownerId)
+        {
+            return await repository.AllReadOnly<Hotel>()
+                .Where(h => h.OwnerId == ownerId)
+                .ProjectToHotelServiceModel()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<HotelServiceModel>> AllHotelsByUserAsync(string userId)
+        {
+            return await repository.AllReadOnly<Hotel>()
+                .Where(h => h.CustomerId == userId)
+                .ProjectToHotelServiceModel()
                 .ToListAsync();
         }
 
