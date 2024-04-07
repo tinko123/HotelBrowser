@@ -12,7 +12,6 @@ using System.Security.Claims;
 
 namespace HotelBrowser.Controllers
 {
-    [Authorize]
 	public class HotelController : BaseController
     {
         private readonly IHotelService hotelService;
@@ -26,10 +25,28 @@ namespace HotelBrowser.Controllers
             hotelService = _hotelService;
             ownerService = _ownerService;
         }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<IActionResult> AllHotels([FromQuery] AllHotelQueryModel query)
+        //{
+        //    var model = await hotelService.AllAsync(
+        //        query.Category,
+        //        query.SearchTerm,
+        //        query.PeopleSorting,
+        //        query.RoomsSorting,
+        //        query.HotelsSorting,
+        //        query.CurrentPage,
+        //        query.HotelsPerPage);
+        //    query.TotalHousesCount = model.TotalHotelsCount;
+        //    query.Hotels = model.Hotels;
+        //    query.Categories = await hotelService.AllWorkCategoriesAsync();
+        //    return View(query);
+        //}
+        [AllowAnonymous]
+        [HttpGet]
         public async Task<IActionResult> AllHotels()
-        
         {
-            IEnumerable<AllHotelsViewModel> model = await hotelService.AllHotelsAsync();
+            var model = await hotelService.AllHotelsAsync();
             return View(model);
         }
         [HttpGet]

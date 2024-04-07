@@ -28,5 +28,6 @@ namespace HotelBrowser.Infrastructure.Constants
         public const int OwnerPhoneMinLength = 7;
         public const string MaxPriceForOneNight = "800.00";
         public const string MinPriceForOneNight = "0.00";
+        public const string PriceErrorMessage = "Price for one night must be a positive number and less then {2} leva.";
     }
 }

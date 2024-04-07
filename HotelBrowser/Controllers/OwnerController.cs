@@ -33,7 +33,7 @@ namespace HotelBrowser.Controllers
                 return View(owner);
             }
             await ownerService.CreateAsync(User.Id(), owner.phoneNumber);
-            return RedirectToAction(nameof(HotelController.AllHotels),"Hotels");
+            return RedirectToAction(nameof(HotelController.AllHotels),"Hotel");
         }
     }
 }
