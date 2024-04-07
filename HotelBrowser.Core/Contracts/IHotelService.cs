@@ -23,5 +23,9 @@ namespace HotelBrowser.Core.Contracts
         Task<IEnumerable<string>> AllWorkCategoriesAsync();
         Task<IEnumerable<HotelServiceModel>> AllHotelsByOwnerAsync(int ownerId);
         Task<IEnumerable<HotelServiceModel>> AllHotelsByUserAsync(string userId);
+        Task EditAsync(AddAndEditHotelsViewModel model);
+        Task<bool> ExistAsync (int id);
+        Task<bool> HasOwnerWithIdAsync(int hotelId, string userId);
+        Task<AddAndEditHotelsViewModel?> GetHotelAddAndEditModelAsync(int id);
     }
 }

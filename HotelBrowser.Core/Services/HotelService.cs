@@ -152,7 +152,29 @@ namespace HotelBrowser.Core.Services
             return hotel.Id;
 		}
 
-		public async Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotelsAsync()
+        public async Task EditAsync(AddAndEditHotelsViewModel model)
+        {
+            var hotel = await repository.GetByIdAsync<Hotel>(model.Id);
+            if(hotel != null)
+            {
+                hotel.Name = model.Name;
+                hotel.Location = model.Location;
+                hotel.Image = model.Image;
+                hotel.Description = model.Description;
+                hotel.FreeRooms = model.FreeRooms;
+                hotel.Price = model.Price;
+                hotel.Phone = model.Phone;
+                hotel.WorkCategoryId = model.WorkCategoryId;
+                await repository.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> ExistAsync(int id)
+        {
+            return await repository.AllReadOnly<Hotel>().AnyAsync(h => h.Id == id);
+        }
+
+        public async Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotelsAsync()
         {
             return await repository
                 .AllReadOnly<Hotel>()
@@ -165,6 +187,31 @@ namespace HotelBrowser.Core.Services
                     ImageURL = h.Image
                 })
                 .ToListAsync();
+        }
+
+        public async Task<AddAndEditHotelsViewModel?> GetHotelAddAndEditModelAsync(int id)
+        {
+            return await repository.AllReadOnly<Hotel>()
+                .Where(h => h.Id == id)
+                .Select(h => new AddAndEditHotelsViewModel
+                {
+                    Id = h.Id,
+                    Name = h.Name,
+                    Location = h.Location,
+                    Image = h.Image,
+                    Description = h.Description,
+                    FreeRooms = h.FreeRooms,
+                    Phone = h.Phone,
+                    Price = h.Price,
+                    WorkCategoryId = h.WorkCategoryId
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> HasOwnerWithIdAsync(int hotelId, string userId)
+        {
+            return await repository.AllReadOnly<Hotel>()
+                .AnyAsync(h => h.Id == hotelId && h.Owner.UserId == userId);
         }
     }
 }

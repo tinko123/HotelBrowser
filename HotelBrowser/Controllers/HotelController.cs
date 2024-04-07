@@ -94,32 +94,66 @@ namespace HotelBrowser.Controllers
 			return RedirectToAction(nameof(AllHotels));
 
         }
+        //[HttpGet]
+        //public async Task<IActionResult> Edit(int id)
+        //{
+        //    var hotel = await data.Hotels.FindAsync(id);
+        //    if (hotel == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var model = new AddAndEditHotelsViewModel
+        //    {
+        //        Id = hotel.Id,
+        //        Name = hotel.Name,
+        //        Location = hotel.Location,
+        //        Image = hotel.Image,
+        //        Description = hotel.Description,
+        //        FreeRooms = hotel.FreeRooms,
+        //        Phone = hotel.Phone,
+        //        Price = hotel.Price,
+        //        WorkCategoryId = hotel.WorkCategoryId,
+        //        WorkCategories = await GetWorkCategories()
+        //    };
+        //    return View(model);
+        //}
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var hotel = await data.Hotels.FindAsync(id);
-            if (hotel == null)
+            if(await hotelService.ExistAsync(id) == false)
             {
-                return NotFound();
+                return BadRequest();
             }
-            var model = new AddAndEditHotelsViewModel
+            if(await hotelService.HasOwnerWithIdAsync(id,User.Id()) == false)
             {
-                Id = hotel.Id,
-                Name = hotel.Name,
-                Location = hotel.Location,
-                Image = hotel.Image,
-                Description = hotel.Description,
-                FreeRooms = hotel.FreeRooms,
-                Phone = hotel.Phone,
-                Price = hotel.Price,
-                WorkCategoryId = hotel.WorkCategoryId,
-                WorkCategories = await GetWorkCategories()
-            };
+                return Unauthorized();
+            }
+            var model = await hotelService.GetHotelAddAndEditModelAsync(id);
+            model.WorkCategories = await hotelService.AllCategoriesAsync();
+            
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> Edit(AddAndEditHotelsViewModel model, int id)
         {
+            if (await hotelService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            if (await hotelService.HasOwnerWithIdAsync(id, User.Id()) == false)
+            {
+                return Unauthorized();
+            }
+            if (await hotelService.CategoryExistAsync(model.WorkCategoryId) == false)
+            {
+                ModelState.AddModelError(nameof(model.WorkCategoryId), "Category does not exist.");
+            }
+            if(!ModelState.IsValid)
+            {
+                model.WorkCategories = await hotelService.AllCategoriesAsync();
+                return View(model);
+            }
+            await hotelService.EditAsync(model);
 
             return RedirectToAction(nameof(AllHotels));
         }
