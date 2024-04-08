@@ -12,12 +12,9 @@ namespace HotelBrowser.Controllers
     {
         private readonly IHotelService hotelService;
         private readonly IOwnerService ownerService;
-        private readonly HotelBrowserDbContext data;
         public HotelController(IHotelService _hotelService,
-            HotelBrowserDbContext context,
             IOwnerService _ownerService)
         {
-            data = context;
             hotelService = _hotelService;
             ownerService = _ownerService;
         }

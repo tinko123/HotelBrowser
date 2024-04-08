@@ -1,11 +1,5 @@
 ﻿using HotelBrowser.Core.Models.Hotel;
-using HotelBrowser.Core.Services;
 using HotelBrowser.Infrastructure.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace System.Linq
 {

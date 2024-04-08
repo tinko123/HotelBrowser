@@ -25,10 +25,8 @@
 						<p class="card-text">Location: @hotel.Location</p>
 						<p class="card-text">Price for one night: @hotel.Price leva</p>
 						<p class="card-text">Number of free rooms: @hotel.FreeRooms</p>
-                        <form class="input-group-sm" asp-controller="Reservation"
-                              asp-area="" asp-action="MakeReservation" asp-route-id="@hotel.Id" method="post">
-                            <input class="btn btn-primary" type="submit" value="Make Reservation" />
-                        </form>
+                        <a asp-area="" asp-controller="Reservation" asp-action="MakeReservation" asp-route-id="@hotel.Id"
+                           class="btn btn-warning">Make Reservation</a>
 					</div>
 				</div>
 			</div>

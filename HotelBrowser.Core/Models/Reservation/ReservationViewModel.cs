@@ -11,7 +11,5 @@ namespace HotelBrowser.Core.Models.Reservation
         public string Description { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
-        public int WorkCategoryId { get; set; }
-        public IEnumerable<WorkCategoryViewModel> WorkCategories { get; set; } = new List<WorkCategoryViewModel>();
     }
 }
