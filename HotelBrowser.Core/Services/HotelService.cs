@@ -152,6 +152,12 @@ namespace HotelBrowser.Core.Services
             return hotel.Id;
 		}
 
+        public async Task DeleteAsync(int hotelId)
+        {
+            await repository.DeleteAsync<Hotel>(hotelId);
+            await repository.SaveChangesAsync();
+        }
+
         public async Task EditAsync(AddAndEditHotelsViewModel model)
         {
             var hotel = await repository.GetByIdAsync<Hotel>(model.Id);

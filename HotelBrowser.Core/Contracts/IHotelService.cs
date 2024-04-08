@@ -27,5 +27,6 @@ namespace HotelBrowser.Core.Contracts
         Task<bool> ExistAsync (int id);
         Task<bool> HasOwnerWithIdAsync(int hotelId, string userId);
         Task<AddAndEditHotelsViewModel?> GetHotelAddAndEditModelAsync(int id);
+        Task DeleteAsync (int hotelId);
     }
 }
