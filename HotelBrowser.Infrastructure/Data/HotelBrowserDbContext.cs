@@ -21,5 +21,6 @@ namespace HotelBrowser.Infrastructure.Data
         public DbSet<Hotel> Hotels { get; set; } = null!;
         public DbSet<WorkCategory> WorkCategories { get; set; } = null!;
         public DbSet<HotelOwner> Owners { get; set; } = null!;
+        public DbSet<Customer> Customers { get; set; } = null!;
     }
 }
