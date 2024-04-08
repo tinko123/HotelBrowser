@@ -6,5 +6,8 @@ namespace HotelBrowser.Core.Contracts
     public interface IReservationService
     {
         Task<ReservationViewModel?> GetReservationModel(int id);
+        Task<int> CreateAsync(CustomerInfoViewModel model);
+
+
     }
 }

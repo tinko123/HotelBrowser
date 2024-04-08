@@ -15,6 +15,22 @@ namespace HotelBrowser.Core.Services
             repository = _repository;
         }
 
+        public async Task<int> CreateAsync(CustomerInfoViewModel model)
+        {
+            Customer customer = new Customer
+            {
+                Name = model.Name,
+                Email = model.Email,
+                Phone = model.Phone,
+                HowManyNights = model.HowManyNights,
+                HowManyPeople = model.HowManyPeople,
+                HowManyRooms = model.HowManyRooms,
+            };
+            await repository.AddAsync(customer);
+            await repository.SaveChangesAsync();
+            return customer.Id;
+        }
+
         public async Task<ReservationViewModel?> GetReservationModel(int id)
         {
             return await repository.AllReadOnly<Hotel>()

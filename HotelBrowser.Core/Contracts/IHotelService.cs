@@ -1,6 +1,8 @@
 ﻿using HotelBrowser.Core.Enumerables;
 using HotelBrowser.Core.Models.Home;
 using HotelBrowser.Core.Models.Hotel;
+using HotelBrowser.Infrastructure.Data.Common;
+using HotelBrowser.Infrastructure.Data.Models;
 
 namespace HotelBrowser.Core.Contracts
 {

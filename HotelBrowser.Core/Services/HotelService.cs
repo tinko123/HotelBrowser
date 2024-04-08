@@ -95,7 +95,6 @@ namespace HotelBrowser.Core.Services
                     Image = h.Image,
                     Description = h.Description,
                     FreeRooms = h.FreeRooms,
-                    //Owner = h.Owner.User.UserName,
                     Price = h.Price,
                     Phone = h.Phone
 
