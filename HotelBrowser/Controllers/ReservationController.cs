@@ -43,7 +43,12 @@ namespace HotelBrowser.Controllers
         public async Task<IActionResult> CustomerInformation(CustomerInfoViewModel model)
         {
             await reservationService.CreateAsync(model);
-            return RedirectToAction(nameof(HotelController.AllHotels), "Hotel");
+            return RedirectToAction(nameof(YourReservationIsMade));
+        }
+        [HttpGet]
+        public IActionResult YourReservationIsMade()
+        {
+            return View();
         }
     }
 }
