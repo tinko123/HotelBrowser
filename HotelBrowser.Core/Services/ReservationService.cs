@@ -24,7 +24,7 @@ namespace HotelBrowser.Core.Services
                 Phone = model.Phone,
                 HowManyNights = model.HowManyNights,
                 HowManyPeople = model.HowManyPeople,
-                HowManyRooms = model.HowManyRooms,
+                HowManyRooms = model.HowManyRooms
             };
             await repository.AddAsync(customer);
             await repository.SaveChangesAsync();

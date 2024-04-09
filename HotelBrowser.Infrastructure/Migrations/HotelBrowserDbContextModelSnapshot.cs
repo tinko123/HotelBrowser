@@ -34,6 +34,9 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
                     b.Property<int>("HowManyNights")
                         .HasColumnType("int");
 
@@ -55,6 +58,8 @@ namespace HotelBrowser.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HotelId");
+
                     b.ToTable("Customers");
                 });
 
@@ -66,10 +71,6 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasComment("Hotel id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasComment("Hotel's cumtomer");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -117,8 +118,6 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasComment("WorkCategory identifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("OwnerId");
 
@@ -420,12 +419,19 @@ namespace HotelBrowser.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
+            modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Customer", b =>
+                {
+                    b.HasOne("HotelBrowser.Infrastructure.Data.Models.Hotel", "Hotel")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Hotel", b =>
                 {
-                    b.HasOne("HotelBrowser.Infrastructure.Data.Models.AppUser", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
                     b.HasOne("HotelBrowser.Infrastructure.Data.Models.HotelOwner", "Owner")
                         .WithMany("Hotels")
                         .HasForeignKey("OwnerId")
@@ -437,8 +443,6 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasForeignKey("WorkCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Customer");
 
                     b.Navigation("Owner");
 
