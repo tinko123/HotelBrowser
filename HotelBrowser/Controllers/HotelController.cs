@@ -18,30 +18,30 @@ namespace HotelBrowser.Controllers
             hotelService = _hotelService;
             ownerService = _ownerService;
         }
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public async Task<IActionResult> AllHotels([FromQuery] AllHotelQueryModel query)
-        //{
-        //    var model = await hotelService.AllAsync(
-        //        query.Category,
-        //        query.SearchTerm,
-        //        query.PeopleSorting,
-        //        query.RoomsSorting,
-        //        query.HotelsSorting,
-        //        query.CurrentPage,
-        //        query.HotelsPerPage);
-        //    query.TotalHousesCount = model.TotalHotelsCount;
-        //    query.Hotels = model.Hotels;
-        //    query.Categories = await hotelService.AllWorkCategoriesAsync();
-        //    return View(query);
-        //}
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> AllHotels()
+        public async Task<IActionResult> AllHotels([FromQuery] AllHotelQueryModel query)
         {
-            var model = await hotelService.AllHotelsAsync();
-            return View(model);
+            var model = await hotelService.AllAsync(
+                query.Category,
+                query.SearchTerm,
+                query.PeopleSorting,
+                query.RoomsSorting,
+                query.HotelsSorting,
+                query.CurrentPage,
+                query.HotelsPerPage);
+            query.TotalHotelsCount = model.TotalHotelsCount;
+            query.Hotels = model.Hotels;
+            query.Categories = await hotelService.AllWorkCategoriesAsync();
+            return View(query);
         }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<IActionResult> AllHotels()
+        //{
+        //    var model = await hotelService.AllHotelsAsync();
+        //    return View(model);
+        //}
         [HttpGet]
         public async Task<IActionResult> MyHotels() 
         {

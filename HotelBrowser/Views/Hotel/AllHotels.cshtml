@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AllHotelsViewModel> 
+﻿@* @model IEnumerable<AllHotelsViewModel> 
 @{
 	ViewBag.Title = "All Hotels";
 }
@@ -31,13 +31,22 @@
 				</div>
 			</div>
 		}
-	</div> 
+	</div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
 }
 else 
 { 
 	<p class="text-center">No hotels yet!</p>
-} 
-@* @model AllHotelQueryModel
+}  *@
+@model AllHotelQueryModel
 @{
     ViewBag.Title = "All Hotels";
 }
@@ -113,7 +122,7 @@ else
         previousPage = 1;
     }
 
-    var maxPage = Math.Ceiling((double)Model.TotalHousesCount /
+    var maxPage = Math.Ceiling((double)Model.TotalHotelsCount /
         Model.HotelsPerPage);
 }
 
@@ -148,7 +157,10 @@ else
            asp-route-roomsSorting="@((int)Model.RoomsSorting)">>></a>
     </div>
 </div>
-
+@if (!User.Identity.IsAuthenticated)
+{
+    <h2 class="text-danger">If you want to make reservationg you need to have an account.</h2>
+}
 @if (!Model.Hotels.Any())
 {
     <h2 class="text-center">No hotels found by the given criteria!</h2>
@@ -159,4 +171,4 @@ else
     {
         <partial name="_HotelPartial" model="@hotel" />
     }
-</div> *@
+</div>

@@ -6,6 +6,7 @@
             <h4>@Model.Name</h4>
             <h6>Location: <b>@Model.Location</b></h6>
             <h6>If you have questions, call: <b>@Model.PhoneNumber</b></h6>
+            <h6>Description: <b>@Model.Description</b></h6>
             <h6>
                 Price Per Night:
                 <b>@String.Format("{0:f2}", Model.PricePerNight) BGN</b>
@@ -13,10 +14,8 @@
             <br />
             @if (this.User.Identity.IsAuthenticated)
             {
-                <a asp-area="" asp-controller="Hotel" asp-action="Edit" asp-route-id="@Model.Id"
-                class="btn btn-warning">Edit</a>
-                <a asp-area="" asp-controller="Hotel" asp-action="Delete" asp-route-id="@Model.Id"
-                class="btn btn-danger">Delete</a>
+                <a asp-area="" asp-controller="Resrvation" asp-action="MakeReservation" asp-route-id="@Model.Id"
+                class="btn btn-warning">Make Reservation</a>
             }
         </div>
     </div>

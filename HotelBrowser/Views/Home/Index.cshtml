@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<HotelIndexServiceModel> 
 @{ 
 	ViewData["Title"] = "Home Page";
-	var houses = Model.ToList();
+	var hotels = Model.ToList();
 } 
-@if (!houses.Any()) 
+@if (!hotels.Any()) 
 { <div class="mt-4 p-5 bg-light">
 	<h1 class="display-4">Welcome to the best place for finding satisfaction for your holiday!</h1> 
 	<p class="lead"> 
@@ -13,7 +13,7 @@
 	<p class="lead"> 
 		@if (User.Identity.IsAuthenticated) 
 		{
-			<a asp-controller="House" asp-action="Add" class="btn btn-primary btn-lg"
+			<a asp-controller="Hotel" asp-action="AddHotel" class="btn btn-primary btn-lg"
 			role="button">Add House</a> 
 		}
 		</p>
@@ -22,19 +22,16 @@
 		<div class="mb-5"></div>
 		<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
 			<div class="carousel-inner"> 
-				@for (int i = 0; i < houses.Count(); i++) 
+				@for (int i = 0; i < hotels.Count(); i++) 
 				{
-					var house = houses[i];
+					var hotel = hotels[i];
 					<div class="carousel-item @(i == 0 ? "active" : string.Empty)"> 
 						<img class="d-block w-100" style="height:500px" 
-						src="@house.ImageURL" alt="@house.Name">
-						<div class="carousel-caption d-none d-md-block">
-							<h5> 
-								<a class="btn btn-primary" asp-controller="House" asp-action="Details"
-								asp-route-id="@house.Id"> @house.Name</a> 
-							</h5> 
-						</div> 
-					</div> 
+						src="@hotel.ImageURL" alt="@hotel.Name">
+				<h2>@hotel.Name</h2>
+					</div>
+				
+
 				} 
 			</div> 
 			<button class="carousel-control-prev" type="button" data-bs

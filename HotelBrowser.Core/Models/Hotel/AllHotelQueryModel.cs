@@ -13,7 +13,7 @@ namespace HotelBrowser.Core.Models.Hotel
         public PeopleSorting PeopleSorting { get; init; }
         public RoomsSorting RoomsSorting { get; init; }
         public int CurrentPage { get; init; }
-        public int TotalHousesCount { get; set; }
+        public int TotalHotelsCount { get; set; }
         public IEnumerable<string> Categories { get; set; } = null!;
         public IEnumerable<HotelServiceModel> Hotels { get; set; } = new List<HotelServiceModel>();
 
