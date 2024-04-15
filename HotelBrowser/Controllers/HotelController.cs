@@ -35,13 +35,6 @@ namespace HotelBrowser.Controllers
             query.Categories = await hotelService.AllWorkCategoriesAsync();
             return View(query);
         }
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public async Task<IActionResult> AllHotels()
-        //{
-        //    var model = await hotelService.AllHotelsAsync();
-        //    return View(model);
-        //}
         [HttpGet]
         public async Task<IActionResult> MyHotels() 
         {
@@ -125,7 +118,7 @@ namespace HotelBrowser.Controllers
             }
             await hotelService.EditAsync(model);
 
-            return RedirectToAction(nameof(AllHotels));
+            return RedirectToAction(nameof(MyHotels));
         }
         [HttpGet]
         public async Task<IActionResult> Delete(int id)

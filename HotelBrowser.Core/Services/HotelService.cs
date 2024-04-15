@@ -61,7 +61,7 @@ namespace HotelBrowser.Core.Services
                 _ => hotelsQuery.OrderByDescending(h => h.Id)
             };
             var hotels = await hotelsQuery
-                .Skip(currentPage * hotelsPerPage)
+                .Skip((currentPage - 1) * hotelsPerPage)
                 .Take(hotelsPerPage)
                 .ProjectToHotelServiceModel()
                 .ToListAsync();

@@ -14,8 +14,10 @@
             <br />
             @if (this.User.Identity.IsAuthenticated)
             {
-                <a asp-area="" asp-controller="Reservation" asp-action="MakeReservation" asp-route-id="@Model.Id"
-                class="btn btn-warning">Make Reservation</a>
+                <a asp-area="" asp-controller="Hotel" asp-action="Edit" asp-route-id="@Model.Id"
+                   class="btn btn-warning">Edit</a>
+                <a asp-area="" asp-controller="Hotel" asp-action="Delete" asp-route-id="@Model.Id"
+                   class="btn btn-danger">Delete</a>
             }
         </div>
     </div>
