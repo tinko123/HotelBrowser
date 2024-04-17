@@ -7,23 +7,73 @@ using Microsoft.AspNetCore;
 using System.Security.Claims;
 using HotelBrowser.Core.Models.Hotel;
 using HotelBrowser.Infrastructure.Data.Common;
+using HotelBrowser.Core.Enumerables;
+using HotelBrowser.Core.Models.Home;
 
 namespace HotelBrowser.Core.Services
 {
-	public class HotelService : IHotelService
+    public class HotelService : IHotelService
     {
         private readonly IRepository repository;
         public HotelService(IRepository _repository)
         {
             repository = _repository;
         }
-
-        public Task AddAsync(AllHotelsViewModel model)
+        public async Task<HotelQueryServiceModel> AllAsync(
+            string? category = null,
+            string? searchTerm = null,
+            PeopleSorting peopleSorting = PeopleSorting.onePerson,
+            RoomsSorting roomsSorting = RoomsSorting.oneRoom,
+            HotelsSorting hotelsSorting = HotelsSorting.Newest,
+            int currentPage = 1,
+            int hotelsPerPage = 1)
         {
-            throw new NotImplementedException();
+            var hotelsQuery = repository.AllReadOnly<Hotel>();
+            if(category!= null)
+            {
+                hotelsQuery = hotelsQuery.Where(h => h.WorkCategory.Name == category);
+            }
+            if(searchTerm != null)
+            {
+                hotelsQuery = hotelsQuery.Where(h => (h.Name.Contains(searchTerm)||
+                                                    h.Description.Contains(searchTerm)||
+                                                    h.Location.Contains(searchTerm)));
+            }
+            hotelsQuery = peopleSorting switch
+            {
+                PeopleSorting.onePerson => hotelsQuery.Where(h => h.FreeRooms >= 1),
+                PeopleSorting.twoPeople => hotelsQuery.Where(h => h.FreeRooms >= 2),
+                PeopleSorting.threePeople => hotelsQuery.Where(h => h.FreeRooms >= 3),
+                PeopleSorting.fourPlusPeople => hotelsQuery.Where(h => h.FreeRooms >= 4),
+                _ => hotelsQuery
+            };
+            hotelsQuery = roomsSorting switch
+            {
+                RoomsSorting.oneRoom => hotelsQuery.Where(h => h.FreeRooms >= 1),
+                RoomsSorting.twoRooms => hotelsQuery.Where(h => h.FreeRooms >= 2),
+                RoomsSorting.threeRooms => hotelsQuery.Where(h => h.FreeRooms >= 3),
+                RoomsSorting.fourPlusRooms => hotelsQuery.Where(h => h.FreeRooms >= 4),
+                _ => hotelsQuery
+            };
+            hotelsQuery = hotelsSorting switch
+            {
+                HotelsSorting.Price => hotelsQuery.OrderBy(h => h.Price),
+                _ => hotelsQuery.OrderByDescending(h => h.Id)
+            };
+            var hotels = await hotelsQuery
+                .Skip((currentPage - 1) * hotelsPerPage)
+                .Take(hotelsPerPage)
+                .ProjectToHotelServiceModel()
+                .ToListAsync();
+            var totalHotels = await hotelsQuery.CountAsync();
+            return new HotelQueryServiceModel
+            {
+                Hotels = hotels,
+                TotalHotelsCount = totalHotels,
+            };
         }
 
-		public async Task<IEnumerable<WorkCategoryViewModel>> AllCategoriesAsync()
+        public async Task<IEnumerable<WorkCategoryViewModel>> AllCategoriesAsync()
 		{
             return await repository.AllReadOnly<WorkCategory>()
 				.Select(w => new WorkCategoryViewModel
@@ -34,7 +84,7 @@ namespace HotelBrowser.Core.Services
 				.ToListAsync();
 		}
 
-		public  async Task<IEnumerable<AllHotelsViewModel>> AllHotelsAsync()
+        public async Task<IEnumerable<AllHotelsViewModel>> AllHotelsAsync()
         {
             return await repository.All<Hotel>()
                 .Select(h => new AllHotelsViewModel
@@ -45,7 +95,6 @@ namespace HotelBrowser.Core.Services
                     Image = h.Image,
                     Description = h.Description,
                     FreeRooms = h.FreeRooms,
-                    //Owner = h.Owner.User.UserName,
                     Price = h.Price,
                     Phone = h.Phone
 
@@ -54,7 +103,31 @@ namespace HotelBrowser.Core.Services
                 .ToListAsync();
         }
 
-		public async Task<bool> CategoryExistAsync(int id)
+        public async Task<IEnumerable<HotelServiceModel>> AllHotelsByOwnerAsync(int ownerId)
+        {
+            return await repository.AllReadOnly<Hotel>()
+                .Where(h => h.OwnerId == ownerId)
+                .ProjectToHotelServiceModel()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<HotelServiceModel>> AllHotelsByUserAsync(string userId)
+        {
+            return await repository.AllReadOnly<Hotel>()
+                .Where(h => h.CustomerId == userId)
+                .ProjectToHotelServiceModel()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<string>> AllWorkCategoriesAsync()
+        {
+            return await repository.AllReadOnly<WorkCategory>()
+                .Select(w => w.Name)
+                .Distinct()
+                .ToListAsync();
+        }
+
+        public async Task<bool> CategoryExistAsync(int id)
 		{
             return await repository.AllReadOnly<WorkCategory>().AnyAsync(w => w.Id == id);
 		}
@@ -78,7 +151,35 @@ namespace HotelBrowser.Core.Services
             return hotel.Id;
 		}
 
-		public async Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotelsAsync()
+        public async Task DeleteAsync(int hotelId)
+        {
+            await repository.DeleteAsync<Hotel>(hotelId);
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task EditAsync(AddAndEditHotelsViewModel model)
+        {
+            var hotel = await repository.GetByIdAsync<Hotel>(model.Id);
+            if(hotel != null)
+            {
+                hotel.Name = model.Name;
+                hotel.Location = model.Location;
+                hotel.Image = model.Image;
+                hotel.Description = model.Description;
+                hotel.FreeRooms = model.FreeRooms;
+                hotel.Price = model.Price;
+                hotel.Phone = model.Phone;
+                hotel.WorkCategoryId = model.WorkCategoryId;
+                await repository.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> ExistAsync(int id)
+        {
+            return await repository.AllReadOnly<Hotel>().AnyAsync(h => h.Id == id);
+        }
+
+        public async Task<IEnumerable<HotelIndexServiceModel>> FirstThreeHotelsAsync()
         {
             return await repository
                 .AllReadOnly<Hotel>()
@@ -91,6 +192,31 @@ namespace HotelBrowser.Core.Services
                     ImageURL = h.Image
                 })
                 .ToListAsync();
+        }
+
+        public async Task<AddAndEditHotelsViewModel?> GetHotelAddAndEditModelAsync(int id)
+        {
+            return await repository.AllReadOnly<Hotel>()
+                .Where(h => h.Id == id)
+                .Select(h => new AddAndEditHotelsViewModel
+                {
+                    Id = h.Id,
+                    Name = h.Name,
+                    Location = h.Location,
+                    Image = h.Image,
+                    Description = h.Description,
+                    FreeRooms = h.FreeRooms,
+                    Phone = h.Phone,
+                    Price = h.Price,
+                    WorkCategoryId = h.WorkCategoryId
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> HasOwnerWithIdAsync(int hotelId, string userId)
+        {
+            return await repository.AllReadOnly<Hotel>()
+                .AnyAsync(h => h.Id == hotelId && h.Owner.UserId == userId);
         }
     }
 }

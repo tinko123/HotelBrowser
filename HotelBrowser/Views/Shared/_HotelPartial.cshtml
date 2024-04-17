@@ -1,0 +1,22 @@
+﻿@model HotelServiceModel
+<div class="col-md-4">
+    <div class="card mb-3">
+        <img class="card-img-top" src="@Model.ImageUrl" alt="House Image">
+        <div class="card-body text-center">
+            <h4>@Model.Name</h4>
+            <h6>Location: <b>@Model.Location</b></h6>
+            <h6>If you have questions, call: <b>@Model.PhoneNumber</b></h6>
+            <h6>Description: <b>@Model.Description</b></h6>
+            <h6>
+                Price Per Night:
+                <b>@String.Format("{0:f2}", Model.PricePerNight) BGN</b>
+            </h6>
+            <br />
+            @if (this.User.Identity.IsAuthenticated)
+            {
+                <a asp-area="" asp-controller="Reservation" asp-action="MakeReservation" asp-route-id="@Model.Id"
+                class="btn btn-warning">Make Reservation</a>
+            }
+        </div>
+    </div>
+</div>

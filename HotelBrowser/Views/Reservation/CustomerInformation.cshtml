@@ -1,0 +1,50 @@
+﻿@model CustomerInfoViewModel
+
+@{
+    ViewBag.Title = "Customer Info";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+<div class="row">
+    <form method="post">
+        <div class="form-group">
+            <div class="mb-3">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" placeholder="Write your name here...">
+                <span asp-validation-for="@Model.Name" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" placeholder="Write your email here..">
+                <span asp-validation-for="@Model.Email" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" class="form-control" placeholder="Write your phone for contact here...">
+                <span asp-validation-for="@Model.Phone" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="HowManyNights"></label>
+                <input asp-for="HowManyNights" class="form-control" placeholder="Write for how long are you going to stay here...">
+                <span asp-validation-for="@Model.HowManyNights" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="HowManyPeople"></label>
+                <input asp-for="HowManyPeople" class="form-control" placeholder="Write how many people are going to be here...">
+                <span asp-validation-for="@Model.HowManyPeople" class="small text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="HowManyRooms"></label>
+                <input asp-for="HowManyRooms" class="form-control" placeholder="Write how many rooms are you going to get here...">
+                <span asp-validation-for="@Model.HowManyRooms" class="small text-danger"></span>
+            </div>
+        </div>
+        <div class="text-center">
+            <input class="btn btn-primary mt-3" type="submit" value="Book" />
+        </div>
+    </form>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

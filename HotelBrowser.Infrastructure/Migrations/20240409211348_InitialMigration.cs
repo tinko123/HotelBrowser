@@ -204,17 +204,11 @@ namespace HotelBrowser.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false, comment: "Hotel's description"),
                     Location = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false, comment: "Hotel's location"),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false, comment: "Hotel's price for 1 night"),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Hotel's image url"),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true, comment: "Hotel's cumtomer")
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Hotel's image url")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Hotels", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Hotels_AspNetUsers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Hotels_Owners_OwnerId",
                         column: x => x.OwnerId,
@@ -225,6 +219,31 @@ namespace HotelBrowser.Infrastructure.Migrations
                         name: "FK_Hotels_WorkCategories_WorkCategoryId",
                         column: x => x.WorkCategoryId,
                         principalTable: "WorkCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HowManyPeople = table.Column<int>(type: "int", nullable: false),
+                    HowManyRooms = table.Column<int>(type: "int", nullable: false),
+                    HowManyNights = table.Column<int>(type: "int", nullable: false),
+                    HotelId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Customers_Hotels_HotelId",
+                        column: x => x.HotelId,
+                        principalTable: "Hotels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -284,9 +303,9 @@ namespace HotelBrowser.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Hotels_CustomerId",
-                table: "Hotels",
-                column: "CustomerId");
+                name: "IX_Customers_HotelId",
+                table: "Customers",
+                column: "HotelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hotels_OwnerId",
@@ -329,10 +348,13 @@ namespace HotelBrowser.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Hotels");
+                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Hotels");
 
             migrationBuilder.DropTable(
                 name: "Owners");

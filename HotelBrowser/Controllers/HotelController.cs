@@ -2,34 +2,53 @@
 using HotelBrowser.Core.Contracts;
 using HotelBrowser.Core.Models.Hotel;
 using HotelBrowser.Infrastructure.Data;
-using HotelBrowser.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using Microsoft.EntityFrameworkCore;
-using System.Runtime.Serialization;
 using System.Security.Claims;
 
 namespace HotelBrowser.Controllers
 {
-    [Authorize]
-	public class HotelController : BaseController
+    public class HotelController : BaseController
     {
         private readonly IHotelService hotelService;
         private readonly IOwnerService ownerService;
-        private readonly HotelBrowserDbContext data;
         public HotelController(IHotelService _hotelService,
-            HotelBrowserDbContext context,
             IOwnerService _ownerService)
         {
-            data = context;
             hotelService = _hotelService;
             ownerService = _ownerService;
         }
-        public async Task<IActionResult> AllHotels()
-        
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> AllHotels([FromQuery] AllHotelQueryModel query)
         {
-            IEnumerable<AllHotelsViewModel> model = await hotelService.AllHotelsAsync();
+            var model = await hotelService.AllAsync(
+                query.Category,
+                query.SearchTerm,
+                query.PeopleSorting,
+                query.RoomsSorting,
+                query.HotelsSorting,
+                query.CurrentPage,
+                query.HotelsPerPage);
+            query.TotalHotelsCount = model.TotalHotelsCount;
+            query.Hotels = model.Hotels;
+            query.Categories = await hotelService.AllWorkCategoriesAsync();
+            return View(query);
+        }
+        [HttpGet]
+        public async Task<IActionResult> MyHotels() 
+        {
+            var userId = User.Id();
+            IEnumerable<HotelServiceModel> model;
+            if(await ownerService.ExistByIdAsync(userId))
+            {
+                var ownerId = await ownerService.GetOwnerIdAsync(userId);
+                model = await hotelService.AllHotelsByOwnerAsync(ownerId ?? 0);
+            }
+            else
+            {
+                model = await hotelService.AllHotelsByUserAsync(userId);
+            }
             return View(model);
         }
         [HttpGet]
@@ -64,82 +83,80 @@ namespace HotelBrowser.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var hotel = await data.Hotels.FindAsync(id);
-            if (hotel == null)
+            if(await hotelService.ExistAsync(id) == false)
             {
-                return NotFound();
+                return BadRequest();
             }
-            var model = new AddAndEditHotelsViewModel
+            if(await hotelService.HasOwnerWithIdAsync(id,User.Id()) == false)
             {
-                Id = hotel.Id,
-                Name = hotel.Name,
-                Location = hotel.Location,
-                Image = hotel.Image,
-                Description = hotel.Description,
-                FreeRooms = hotel.FreeRooms,
-                Phone = hotel.Phone,
-                Price = hotel.Price,
-                WorkCategoryId = hotel.WorkCategoryId,
-                WorkCategories = await GetWorkCategories()
-            };
+                return Unauthorized();
+            }
+            var model = await hotelService.GetHotelAddAndEditModelAsync(id);
+            model.WorkCategories = await hotelService.AllCategoriesAsync();
+            
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> Edit(AddAndEditHotelsViewModel model, int id)
         {
+            if (await hotelService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            if (await hotelService.HasOwnerWithIdAsync(id, User.Id()) == false)
+            {
+                return Unauthorized();
+            }
+            if (await hotelService.CategoryExistAsync(model.WorkCategoryId) == false)
+            {
+                ModelState.AddModelError(nameof(model.WorkCategoryId), "Category does not exist.");
+            }
+            if(!ModelState.IsValid)
+            {
+                model.WorkCategories = await hotelService.AllCategoriesAsync();
+                return View(model);
+            }
+            await hotelService.EditAsync(model);
 
-            return RedirectToAction(nameof(AllHotels));
+            return RedirectToAction(nameof(MyHotels));
         }
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            //var hotel = await data.Hotels.FindAsync(id);
-            //if (hotel == null)
-            //{
-            //    return BadRequest();
-            //}
-            //if (hotel.OwnerId != GetUserId())
-            //{
-            //    return Unauthorized();
-            //}
-            //var model = new DeleteViewModel
-            //{
-            //    Id = hotel.Id,
-            //    Name = hotel.Name
-            //};
-            // return View(model);
-            return View();
+            if(await hotelService.ExistAsync(id) == false)
+            {
+                return BadRequest();
+            }
+            if(await hotelService.HasOwnerWithIdAsync(id,User.Id()) == false)
+            {
+                return Unauthorized();
+            }
+            var hotel = await hotelService.GetHotelAddAndEditModelAsync(id);
+            hotel.WorkCategories = await hotelService.AllCategoriesAsync();
+            var model = new DeleteViewModel()
+            {
+                Id = hotel.Id,
+                Name = hotel.Name,
+                Description = hotel.Description,
+                Location = hotel.Location,
+                ImageUrl = hotel.Image
+            };
+               
+            return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(DeleteViewModel model)
+        public async Task<IActionResult> Delete(DeleteViewModel model)
         {
-            //var hotel = await data.Hotels.FindAsync(model.Id);
-            //if (hotel == null)
-            //{
-            //    return BadRequest();
-            //}
-            //if (hotel.OwnerId != GetUserId())
-            //{
-            //    return Unauthorized();
-            //}
-            //data.Hotels.Remove(hotel);
-            //await data.SaveChangesAsync();
+            if (await hotelService.ExistAsync(model.Id) == false)
+            {
+                return BadRequest();
+            }
+            if (await hotelService.HasOwnerWithIdAsync(model.Id, User.Id()) == false)
+            {
+                return Unauthorized();
+            }
+            await hotelService.DeleteAsync(model.Id);
             return RedirectToAction(nameof(AllHotels));
-        }
-        private async Task<IEnumerable<WorkCategoryViewModel>> GetWorkCategories()
-        {
-            return await data.WorkCategories
-                .AsNoTracking()
-                .Select(c => new WorkCategoryViewModel
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                })
-                .ToListAsync();
-        }
-        private string GetUserId()
-        {
-            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
         }
     }
 }

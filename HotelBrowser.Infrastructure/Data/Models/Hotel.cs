@@ -23,7 +23,6 @@ namespace HotelBrowser.Infrastructure.Data.Models
         [Required]
         [Comment("WorkCategory identifier")]
         public int WorkCategoryId { get; set; }
-        //[ForeignKey(nameof(WorkCategoryId))]
         public WorkCategory WorkCategory { get; set; } = null!;
         [Required]
         [Comment("Owner of the hotel")]

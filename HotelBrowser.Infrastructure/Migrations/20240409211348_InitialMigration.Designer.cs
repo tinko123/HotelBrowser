@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelBrowser.Infrastructure.Migrations
 {
     [DbContext(typeof(HotelBrowserDbContext))]
-    [Migration("20240406114328_InitialMigration")]
+    [Migration("20240409211348_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,47 @@ namespace HotelBrowser.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HowManyNights")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HowManyPeople")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HowManyRooms")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Hotel", b =>
                 {
                     b.Property<int>("Id")
@@ -32,10 +73,6 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasComment("Hotel id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CustomerId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasComment("Hotel's cumtomer");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -83,8 +120,6 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasComment("WorkCategory identifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("OwnerId");
 
@@ -386,12 +421,19 @@ namespace HotelBrowser.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("AppUser");
                 });
 
+            modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Customer", b =>
+                {
+                    b.HasOne("HotelBrowser.Infrastructure.Data.Models.Hotel", "Hotel")
+                        .WithMany()
+                        .HasForeignKey("HotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("HotelBrowser.Infrastructure.Data.Models.Hotel", b =>
                 {
-                    b.HasOne("HotelBrowser.Infrastructure.Data.Models.AppUser", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
                     b.HasOne("HotelBrowser.Infrastructure.Data.Models.HotelOwner", "Owner")
                         .WithMany("Hotels")
                         .HasForeignKey("OwnerId")
@@ -403,8 +445,6 @@ namespace HotelBrowser.Infrastructure.Migrations
                         .HasForeignKey("WorkCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Customer");
 
                     b.Navigation("Owner");
 

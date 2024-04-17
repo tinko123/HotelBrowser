@@ -40,7 +40,6 @@ namespace HotelBrowser.Core.Models.Hotel
         [Display(Name = "Price for one night")]
         public decimal Price { get; set; }
         [Required(ErrorMessage = RequiredField)]
-        [MaxLength(ImageMaxLength, ErrorMessage = ImageErrorMessage)]
         public string Image { get; set; } = string.Empty;
         [Required(ErrorMessage = RequiredField)]
         public int WorkCategoryId { get; set; }
