@@ -31,7 +31,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
-            // leave the options as not strong only for testing purposes
             services
                 .AddDefaultIdentity<IdentityUser>(options =>
                 {
