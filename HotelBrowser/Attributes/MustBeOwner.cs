@@ -19,6 +19,7 @@ namespace HotelBrowser.Attributes
 				context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
 			}
 
+
 			if (agentService != null
 				&& agentService.ExistByIdAsync(context.HttpContext.User.Id()).Result == false)
 			{
